@@ -1,0 +1,242 @@
+# O que levar em consideração ao escolher um banco de dados em uma entrevista de System Design?
+
+Ao escolher um banco de dados em uma entrevista de System Design, o principal é justificar a escolha com base nos requisitos do sistema. Não existe “o melhor banco” em geral; existe o banco mais adequado para o tipo de dado, volume, padrão de acesso, consistência e escala esperada.
+
+## Principais critérios
+
+### 1. Formato dos dados
+
+É importante entender se os dados são altamente estruturados, semi-estruturados ou não estruturados.
+
+Exemplos:
+
+* Dados relacionais, como usuários, pedidos, pagamentos e assinaturas, normalmente combinam bem com SQL.
+* Dados flexíveis, como logs, eventos, metadados e documentos com campos variáveis, podem combinar melhor com NoSQL.
+* Dados de busca textual podem exigir uma search engine, como Elasticsearch/OpenSearch.
+* Dados vetoriais, usados em IA e busca semântica, podem exigir um vector database.
+* Dados temporais, como métricas, telemetria e sensores, podem exigir um time-series database.
+
+---
+
+### 2. Padrões de acesso
+
+Antes de escolher o banco, é essencial entender como os dados serão lidos e escritos.
+
+Perguntas importantes:
+
+* O sistema terá muito mais leitura ou escrita?
+* As queries precisam de joins complexos?
+* Os dados serão acessados por ID, por filtros, por texto, por intervalo de tempo ou por relacionamento?
+* A aplicação precisa consultar dados agregados em tempo real?
+* O sistema precisa suportar milhões de requisições por segundo?
+
+Exemplo:
+
+Se o sistema é um feed de posts, talvez seja necessário otimizar leituras e usar cache.
+Se é um sistema financeiro, consistência e transações provavelmente são mais importantes.
+Se é um sistema de logs, alta escrita e esquema flexível podem ser mais relevantes.
+
+---
+
+### 3. Latência
+
+A escolha do banco também depende da latência esperada.
+
+Exemplos:
+
+* Para autenticação, sessões e rate limiting, a latência precisa ser muito baixa. Um key-value store como Redis pode ser adequado.
+* Para relatórios analíticos, uma latência maior pode ser aceitável.
+* Para uma timeline ou feed, pode ser necessário combinar banco principal, cache e pré-computação.
+
+---
+
+### 4. Consistência e disponibilidade
+
+Aqui entra o raciocínio relacionado ao CAP Theorem.
+
+Em sistemas distribuídos, normalmente precisamos equilibrar:
+
+* **Consistency:** todos os usuários veem o dado mais atualizado.
+* **Availability:** o sistema continua respondendo mesmo diante de falhas.
+* **Partition tolerance:** o sistema lida com falhas de comunicação entre nós.
+
+Exemplo:
+
+Em um sistema bancário, consistência forte é essencial.
+Em um sistema de curtidas, visualizações ou contagem de seguidores, consistência eventual pode ser aceitável.
+
+---
+
+### 5. Volume de leitura e escrita
+
+Também é importante avaliar se o sistema é mais orientado a leitura ou escrita.
+
+Exemplos:
+
+* Sistemas com muitas leituras podem se beneficiar de cache, replicas de leitura e materialized views.
+* Sistemas com muitas escritas podem precisar de particionamento, filas, batch processing ou bancos otimizados para escrita.
+* Bancos SQL podem ter maior custo em escritas distribuídas, principalmente quando há transações, índices e constraints fortes.
+* Bancos NoSQL geralmente escalam escrita com mais facilidade, mas podem exigir mais cuidado na modelagem e consistência dos dados.
+
+---
+
+# Padrão comum em entrevistas de System Design
+
+Em entrevistas, uma escolha inicial comum é começar com um banco **SQL**, principalmente quando o domínio possui regras de negócio importantes, dados relacionais e necessidade de consistência.
+
+Exemplo:
+
+Para sistemas como e-commerce, pagamentos, reservas, assinaturas ou contas de usuário, um banco relacional como PostgreSQL ou MySQL costuma ser uma boa escolha inicial.
+
+A partir disso, você adiciona outras tecnologias conforme os requisitos aparecem.
+
+Exemplos:
+
+* **Cache:** para reduzir carga no banco e melhorar latência.
+* **Search engine:** para busca textual avançada.
+* **Data warehouse/OLAP:** para analytics e relatórios.
+* **Data lake:** para grande volume de dados brutos.
+* **Time-series database:** para métricas e eventos temporais.
+* **Graph database:** para relações complexas, como redes sociais ou recomendações.
+* **Vector database:** para busca semântica e aplicações com IA.
+
+---
+
+# SQL
+
+Bancos SQL são uma boa escolha quando o sistema precisa de dados bem estruturados, consistência e regras de negócio fortes.
+
+## Quando usar SQL
+
+* Dados relacionais.
+* Queries complexas.
+* Joins entre entidades.
+* Transações ACID.
+* Consistência forte.
+* Regras de negócio importantes.
+* Integridade referencial.
+
+## Exemplos de uso
+
+* Sistema financeiro.
+* E-commerce.
+* Sistema de pagamentos.
+* Reservas de hotel ou passagem.
+* Gestão de usuários e permissões.
+* Assinaturas e cobrança recorrente.
+
+## Dificuldades
+
+* Escala horizontal pode ser mais complexa.
+* Escritas distribuídas são mais difíceis.
+* Sharding pode aumentar bastante a complexidade.
+* Schemas rígidos exigem migrations bem controladas.
+* Muitos índices podem melhorar leitura, mas piorar escrita.
+
+---
+
+# NoSQL
+
+Bancos NoSQL são úteis quando o sistema precisa de alta escala, esquema flexível ou acesso muito específico aos dados.
+
+## Quando usar NoSQL
+
+* Dados semi-estruturados ou flexíveis.
+* Alto volume de escrita.
+* Escala horizontal.
+* Acesso por chave ou documento.
+* Casos em que joins não são necessários.
+* Consistência eventual é aceitável.
+
+## Exemplos de uso
+
+* Logs.
+* Eventos.
+* Catálogo de produtos com atributos variáveis.
+* Sessões de usuários.
+* Feed de atividades.
+* Dados de telemetria.
+* Metadados com estrutura variável.
+
+## Dificuldades
+
+* Pode ser mais fácil quebrar regras de negócio.
+* Normalmente não há joins como em bancos relacionais.
+* A modelagem depende muito dos padrões de acesso.
+* Pode gerar duplicação de dados.
+* A consistência pode ser eventual.
+* Algumas validações precisam ficar mais fortes na aplicação.
+
+---
+
+# Key-Value Stores
+
+Key-value stores são um dos tipos de NoSQL mais importantes para entrevistas de System Design, principalmente porque aparecem em muitos componentes de infraestrutura.
+
+O exemplo mais comum é o Redis.
+
+## Quando usar Key-Value Stores
+
+* Cache.
+* Sessões.
+* Feature flags.
+* Rate limiting.
+* Chaves de idempotência.
+* Locks distribuídos.
+* Contadores.
+* Filas simples.
+* Dados temporários com TTL.
+
+## Exemplos
+
+### Cache
+
+Guardar o resultado de uma query pesada para evitar bater no banco toda vez.
+
+Exemplo:
+
+```txt
+user:123:profile -> dados do perfil do usuário
+```
+
+### Sessões
+
+Guardar o estado de login de um usuário.
+
+```txt
+session:abc123 -> userId: 123
+```
+
+### Rate limiting
+
+Controlar quantas requisições um usuário fez em determinado período.
+
+```txt
+rate_limit:user:123 -> 50 requests/min
+```
+
+### Feature flags
+
+Ativar ou desativar funcionalidades para grupos específicos de usuários.
+
+```txt
+feature:new_checkout:user:123 -> enabled
+```
+
+### Idempotency keys
+
+Evitar que uma mesma operação seja processada duas vezes, especialmente em pagamentos.
+
+```txt
+idempotency:payment:req_abc123 -> processed
+```
+
+---
+
+## Resumo prático para entrevista
+
+Uma boa resposta em System Design poderia ser:
+
+> Eu começaria com PostgreSQL porque o sistema tem entidades relacionais, regras de negócio importantes e precisa de consistência. Para reduzir a carga de leitura, adicionaria Redis como cache. Se o sistema precisar de busca textual avançada, adicionaria Elasticsearch/OpenSearch. Para analytics, separaria a carga operacional da analítica usando um data warehouse ou banco colunar. Caso o volume de escrita cresça muito, avaliaria particionamento, filas e eventualmente uma solução NoSQL para partes específicas do sistema.
+
+Essa resposta é boa porque mostra que você não escolhe tecnologia por moda, mas sim por requisito.
