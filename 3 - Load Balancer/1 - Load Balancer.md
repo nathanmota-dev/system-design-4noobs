@@ -67,3 +67,94 @@ A imagem destaca exatamente essa diferença: na camada 7 o balanceador enxerga d
 
 ![OSI-LB](../assets/OSI-LB.png)
 
+---
+
+### Diferença dos tipos de Load Balancer
+
+#### Camada 4 (camada de transporte)
+
+O Load Balancer de camada 4 trabalha no nível de transporte. Ele não entende a regra de negócio nem o conteúdo da requisição HTTP. A decisão normalmente é baseada em informações como:
+
+- IP de origem
+- IP de destino
+- Porta de origem
+- Porta de destino
+- Protocolo TCP ou UDP
+
+Como ele não precisa interpretar a aplicação, tende a ser mais simples e rápido.
+
+Vantagens:
+- Alto desempenho
+- Baixa latência
+- Baixo overhead
+- Funciona bem com protocolos que não são HTTP
+
+Desvantagens:
+- Não consegue rotear por URL, header, método HTTP ou payload
+- Tem menos flexibilidade para regras específicas da aplicação
+- Geralmente oferece menos recursos de aplicação, como autenticação, cache e rate limiting
+
+Casos de uso:
+- Conexões com bancos de dados
+- Serviços TCP ou UDP
+- Jogos online
+- Sistemas que precisam de alta performance e baixa latência
+
+#### Camada 7 (camada de aplicação)
+
+O Load Balancer de camada 7 trabalha no nível da aplicação. Ele entende detalhes do protocolo usado pela aplicação, principalmente HTTP/HTTPS e, em muitos cenários, gRPC.
+
+Ele pode tomar decisões com base em:
+
+- Hostname
+- Caminho da URL
+- Headers
+- Cookies
+- Método HTTP, como GET, POST, PUT e DELETE
+- Informações do protocolo de aplicação
+
+Por enxergar a requisição com mais detalhe, ele permite regras de roteamento mais inteligentes.
+
+Vantagens:
+- Roteamento por domínio, rota, header ou método HTTP
+- Melhor suporte para microsserviços
+- Possibilidade de centralizar autenticação, cache, rate limiting, WAF e TLS termination
+- Mais controle sobre tráfego HTTP e APIs
+
+Desvantagens:
+- Maior complexidade operacional
+- Maior consumo de CPU e memória
+- Pode adicionar mais latência do que um balanceador de camada 4
+- Normalmente custa mais, dependendo da solução usada
+
+---
+
+Um ponto importante é que usar um Load Balancer de camada 4 não exclui o uso de um Load Balancer de camada 7. Muitas arquiteturas usam os dois.
+
+Por exemplo, um balanceador de camada 4 pode distribuir conexões TCP entre regiões ou clusters, enquanto um balanceador de camada 7, dentro de cada região, roteia requisições HTTP para serviços diferentes com base no domínio ou no caminho da URL.
+
+![OSI-LB](../assets/LBB.png)
+
+Em aplicações web e APIs, o Load Balancer de camada 7 costuma aparecer com mais frequência, porque ele oferece mais controle sobre o tráfego da aplicação. Já em cenários de baixa latência, tráfego TCP/UDP genérico ou protocolos que não são HTTP, a camada 4 pode fazer mais sentido.
+
+---
+
+### Casos de uso
+
+Normalmente, o Load Balancer é usado em algum serviço de cloud, como AWS, Azure ou GCP. Também é possível usar um Load Balancer fora da cloud, em servidores próprios, mas em cenários reais de escala é mais comum usar soluções gerenciadas ou ferramentas dedicadas, como NGINX, HAProxy, Envoy e Traefik.
+
+Em aplicações grandes, é comum existir balanceamento em mais de um nível. Pode haver um balanceador global distribuindo tráfego entre regiões com base em latência, saúde e proximidade geográfica, e outros balanceadores internos distribuindo tráfego entre serviços e instâncias dentro de cada região.
+
+
+### Trade-offs
+
+- Escalabilidade
+- Confiabilidade
+- Lidar com falhas
+- Reduzir latência
+- Aumentar a flexibilidade de roteamento
+
+Desvantagens:
+- Maior custo
+- Maior complexidade
+- Pode adicionar latência, porque a requisição passa pelo Load Balancer antes de chegar ao servidor. Em sistemas com apenas uma instância, essa camada extra pode não compensar. Em sistemas com várias instâncias, regiões ou serviços, o ganho de disponibilidade, distribuição de carga e resiliência normalmente compensa esse custo.
