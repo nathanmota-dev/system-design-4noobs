@@ -1,6 +1,6 @@
 # NoSQL
 
-Essa nota complementa o arquivo `SQLxNoSql.md`. A ideia aqui nao e aprofundar teoria, e sim passar rapidamente pelos principais tipos de bancos NoSQL, citar nomes comuns e mostrar onde eles costumam aparecer em aplicacoes de system design.
+Essa nota complementa o arquivo `02-SQLxNoSql.md`. A ideia aqui nao e aprofundar teoria, e sim passar rapidamente pelos principais tipos de bancos NoSQL, citar nomes comuns e mostrar onde eles costumam aparecer em aplicacoes de system design.
 
 ## Quando NoSQL costuma entrar
 
