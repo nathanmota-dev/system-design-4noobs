@@ -1,31 +1,31 @@
 # Design de Alto Nível
 
-A ideia do Design de Alto Nível em uma entrevista de System Design é conseguir levantar uma ideia geral do sistema a ser desenvolvido, entendendo os requisitos e o contexto do projeto.
+A ideia do Design de Alto Nível em uma entrevista de System Design é levantar uma visão geral do sistema a ser desenvolvido, entendendo os requisitos e o contexto do projeto.
 
-Exemplo: Se foi proposto para a gente que precisamos fazer um encurtador de URLs, o Design de Alto Nível seria entender quais são os requisitos e o contexto do projeto, e levantar uma ideia geral do sistema a ser desenvolvido.
+Exemplo: se nos propuserem desenvolver um encurtador de URLs, o Design de Alto Nível consiste em entender os requisitos e o contexto do projeto e levantar uma visão geral do sistema a ser desenvolvido.
 
-Vamos supor que após perguntas para o entrevistador, conseguimos ter a ideia que:
+Vamos supor que, após fazermos algumas perguntas ao entrevistador, chegamos aos seguintes requisitos:
 
-- Precisamos encurtar URLs e lidar com algo pra não ter ids repetidos.
-- Precisamos lidar com 10 milhões de URLs unicas
-- Precisamos lidar com 1 milhão de requests
+- Precisamos encurtar URLs e lidar com a geração de IDs exclusivos.
+- Precisamos lidar com 10 milhões de URLs únicas.
+- Precisamos lidar com 1 milhão de requisições.
 
 # Etapas
 
-A primeira etapa seria pensar em formas de como lidar com a geração de URLs unicas, existem algumas formas pra fazer isso e a gente não precisa saber, apenas levantar uma ideia geral do que pode ser feito. Por exemplo existem:
+A primeira etapa seria pensar em formas de lidar com a geração de URLs únicas. Existem algumas maneiras de fazer isso; não precisamos conhecer todos os detalhes, apenas levantar uma ideia geral do que pode ser feito. Por exemplo:
 
 - Hashing Function
 - UUID
 - Sequential IDs
 
-Trabalhar com Sequential IDs pode não ser a melhor opção, pois pode gerar problemas de concorrência e de performance. Hash Functions e UUIDs são outras opções mais escaláveis. 
+Trabalhar com IDs sequenciais pode não ser a melhor opção, pois isso pode gerar problemas de concorrência e desempenho. Funções de hash e UUIDs são outras opções mais escaláveis.
 
-Depois vc precisa pensar o que vai ser salvo no banco e pensando nisso vc pode decidir qual opção é mais adequada para o projeto.
+Depois, é preciso pensar no que será salvo no banco de dados. A partir disso, podemos decidir qual opção é mais adequada para o projeto.
 
-Pra esse caso, a gente precisaria salvar o Id, Url antiga e a Url encurtada (a url encurtada talvez nem precisaria se vc usa o id pra gerar essa url). Sabedo disso pra esse exemplo poderia usar tanto Banco relacional como noSQL, porem a ideia da escolha do banco e mostrar para o entrevistador qual opção seria mais adequada para o projeto dando um PORQUE.
+Nesse caso, precisaríamos salvar o ID, a URL original e a URL encurtada. A URL encurtada talvez nem precisasse ser armazenada se usássemos o ID para gerá-la. Sabendo disso, poderíamos usar tanto um banco de dados relacional quanto um NoSQL. Porém, o objetivo da escolha do banco é mostrar ao entrevistador qual opção seria mais adequada para o projeto, apresentando uma justificativa.
 
-Depois disso a ideia seria montar um System Design, comecando bem tranquilo, e escalando gradualmente conforme a identificação de gargalos, entao o primeiro design 
+Depois disso, a ideia seria montar um System Design começando de forma simples e escalando gradualmente conforme os gargalos fossem identificados. O primeiro design seria:
 
-Exemplo: request -> server -> db. Um server nao aguenta as requests entao precisa adicionar mais servers, adicionando mais servers como vc lida com qual request vai pra onde, entao vc precisa de um load balancer para distrubuir a carga, e assim vc vai aumentando a capacidade do sistema.
+Exemplo: requisição -> servidor -> banco de dados. Se um servidor não suportar todas as requisições, será necessário adicionar mais servidores. Nesse caso, precisamos lidar com a distribuição das requisições entre eles e, por isso, utilizamos um load balancer para distribuir a carga. Assim, aumentamos gradualmente a capacidade do sistema.
 
 ![Alto Nível](../assets/alto-nivel.png)
