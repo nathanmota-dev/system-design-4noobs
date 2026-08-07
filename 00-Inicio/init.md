@@ -1,17 +1,31 @@
-# Início
+# O que é System Design?
 
-Pra conseguir entender System Design, você precisa entender o seguinte conceito:
+System Design é o processo de projetar a arquitetura de um sistema: seus componentes, a comunicação entre as aplicações, o uso de bancos de dados e outros elementos. O objetivo é criar uma solução que atenda aos requisitos e seja escalável, eficiente e confiável.
 
-**TUDO É TRADE-OFF**
+### Conceito
 
-Se você não sabe o que é um trade-off, ele acontece quando uma decisão traz benefícios, mas também possui custos, limitações ou desvantagens.
+Para entender System Design, é importante ter em mente um conceito fundamental:
 
-Por exemplo, uma solução pode melhorar a performance de um sistema, mas aumentar sua complexidade ou seu custo.
+**toda decisão envolve trade-offs.**
 
-Então, em System Design, a ideia é projetar um sistema que atenda às necessidades dos usuários e seja escalável, eficiente e confiável. Porém, pra isso, você precisa entender os problemas, gargalos e limitações do sistema e escolher as soluções com os trade-offs mais adequados para aquele cenário.
+Um trade-off acontece quando uma decisão traz benefícios, mas também envolve custos, limitações ou desvantagens.
 
-Não existe uma solução perfeita ou sem trade-offs. Existe a solução que melhor atende aos requisitos e às prioridades do sistema.
+Por exemplo, uma solução pode melhorar o desempenho de um sistema, mas aumentar sua complexidade ou seu custo.
 
-#### Entrevistas
+Em System Design, portanto, você precisa entender os requisitos, os problemas, os gargalos e as limitações do sistema. A partir disso, deve escolher as soluções cujos trade-offs sejam mais adequados ao cenário.
 
-Nem sempre em uma entrevista você vai precisar fazer um system design completo de um sistema, muitas vezes vão te propor um problema já existente e você precisa pensar em como resolver ele como um sistema legado com gargalo que precisa de melhora e você vai precisar pensar na solução que melhor atende aos requisitos e às prioridades do sistema, esse repo foi criado justamente para ajudar a entender os conceitos. Não pense que após finalizar a leitura do repo você já sabe tudo sobre System Design ou vai ficar 100% preparado, a ideia aqui é conseguir passar todos os conceitos necessários para entender como fazer um system design, desde o zero ou presente em cenários reais como falado anteiormente, porém você vai aprender mesmo na prática e não apenas teoricamente e entendendo os conceitos te abre um portal pra quando usar x solução ou y solução em um cenário específico.
+Não existe uma solução perfeita ou livre de trade-offs. Existe a solução que melhor atende aos requisitos e às prioridades do sistema.
+
+### Entrevistas
+
+Em uma entrevista, nem sempre você precisará projetar um sistema completo do zero. Muitas vezes, será apresentado um problema já existente, e você precisará pensar em como resolvê-lo.
+
+Pode ser, por exemplo, um sistema legado com um gargalo de desempenho ou um problema de escalabilidade. Nesse caso, será necessário analisar o cenário e propor a solução que melhor atenda aos requisitos e às prioridades do sistema.
+
+Este repositório foi criado para ajudar você a entender esses conceitos.
+
+Ao finalizar a leitura do repositório, você não saberá tudo sobre System Design nem estará 100% preparado. A proposta é apresentar os principais conceitos para que você entenda como projetar um sistema, seja começando do zero ou analisando cenários reais, como o exemplo citado anteriormente.
+
+O aprendizado, porém, acontece principalmente na prática — e não apenas estudando a teoria. Entender esses conceitos ajudará você a identificar quando usar uma solução ou outra em um cenário específico.
+
+Não adianta partir para a prática sem compreender os conceitos fundamentais. Afinal, você não saberá quando ou como usar um gateway de API ou um Load Balancer se não entender como eles funcionam.
