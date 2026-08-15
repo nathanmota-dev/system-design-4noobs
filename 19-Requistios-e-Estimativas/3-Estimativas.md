@@ -31,7 +31,7 @@ Os valores abaixo são aproximações utilizadas para comparar o custo de difere
 
 Esses números não devem ser tratados como valores fixos. O objetivo é compreender a diferença entre as ordens de grandeza.
 
-A gente precisa saber que um piscar de olhos sao 100ms, ou seja, qualquer coisa a baixo disso pro usuário é imperceptível.
+Como referência aproximada, um piscar de olhos dura algumas centenas de milissegundos. Isso ajuda a visualizar a ordem de grandeza, mas não significa que toda latência abaixo de 100 ms seja imperceptível: o usuário percebe o tempo total da interação, que pode reunir várias operações.
 
 Por exemplo:
 
@@ -122,8 +122,6 @@ Essa estimativa ainda não considera:
 Na prática, o espaço necessário seria maior.
 
 ---
-
-## 6. Estimativa de Uploads por Segundo
 
 ## 6. Estimativa de Uploads por Segundo
 
