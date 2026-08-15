@@ -2,7 +2,7 @@
 
 System Design é o processo de projetar a arquitetura de um sistema: seus componentes, a comunicação entre as aplicações, o uso de bancos de dados e outros elementos. O objetivo é criar uma solução que atenda aos requisitos e seja escalável, eficiente e confiável.
 
-### Conceito
+## Conceito
 
 Para entender System Design, é importante ter em mente um conceito fundamental:
 
@@ -16,7 +16,7 @@ Em System Design, portanto, você precisa entender os requisitos, os problemas, 
 
 Não existe uma solução perfeita ou livre de trade-offs. Existe a solução que melhor atende aos requisitos e às prioridades do sistema.
 
-### Entrevistas
+## Entrevistas
 
 Em uma entrevista, nem sempre você precisará projetar um sistema completo do zero. Muitas vezes, será apresentado um problema já existente, e você precisará pensar em como resolvê-lo.
 

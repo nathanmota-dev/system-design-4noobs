@@ -4,7 +4,7 @@ O propósito do Load Balancer é distribuir o tráfego de entrada entre vários 
 
 ![LoadBalancer](../assets/LoadBalancer.png)
 
-### Pra que serve o Load Balancer?
+## Para que serve o Load Balancer?
 
 1. Distribuir carga - Distribuir o tráfego de entrada entre vários servidores ou instâncias de um serviço.
 2. Escalabilidade - Permitir que a aplicação cresça horizontalmente, adicionando ou removendo instâncias conforme a demanda.
@@ -15,7 +15,7 @@ Em aplicações reais, é comum existir mais de um Load Balancer. Podemos ter um
 
 ---
 
-### Funcionalidades do Load Balancer:
+## Funcionalidades do Load Balancer
 
 1. Health check - Verificar a saúde das instâncias. Se uma instância cair ou começar a responder mal, o Load Balancer para de enviar tráfego para ela.
 2. Distribuição de carga - Direcionar mais tráfego para instâncias menos ocupadas, dependendo do algoritmo configurado.
@@ -25,7 +25,7 @@ Em aplicações reais, é comum existir mais de um Load Balancer. Podemos ter um
 
 ---
 
-### Como o Load Balancer funciona distribuindo a carga?
+## Como o Load Balancer distribui a carga?
 
 Agora que entendemos as funcionalidades do Load Balancer, vamos entender como ele funciona distribuindo a carga:
 
@@ -35,7 +35,7 @@ Agora que entendemos as funcionalidades do Load Balancer, vamos entender como el
 4. Least Response Time - O Load Balancer pode usar o algoritmo Least Response Time, onde o servidor ou instância de um serviço com menor tempo de resposta recebe mais tráfego.
 5. IP Hash - O Load Balancer pode usar o algoritmo IP Hash, onde o servidor é escolhido com base no endereço IP do cliente. Isso ajuda a manter afinidade, direcionando o mesmo cliente para a mesma instância em muitos casos.
 
-### Estático vs Dinâmico
+## Estático vs. dinâmico
 
 O Load Balancer pode ser configurado como estático ou dinâmico, dependendo da necessidade. 
 
@@ -48,7 +48,7 @@ Um Load Balancer dinâmico tem:
 2. Ajuste em tempo real - Direciona o tráfego para os destinos mais adequados com base no estado atual do sistema.
 
 
-### Stateful vs Stateless
+## Stateful vs. stateless
 
 Um Load Balancer stateful mantém algum contexto da sessão do cliente, como afinidade de sessão (`sticky session`). Já um Load Balancer stateless trata cada requisição de forma independente, sem guardar esse contexto.
 
@@ -56,7 +56,7 @@ Na prática, arquiteturas stateless costumam escalar melhor, porque qualquer ins
 
 ---
 
-### Camada OSI
+## Camada OSI
 
 O Load Balancer normalmente opera na camada 4 ou na camada 7 do modelo OSI.
 
@@ -69,9 +69,9 @@ A imagem destaca exatamente essa diferença: na camada 7 o balanceador enxerga d
 
 ---
 
-### Diferença dos tipos de Load Balancer
+## Diferença entre os tipos de Load Balancer
 
-#### Camada 4 (camada de transporte)
+### Camada 4 (camada de transporte)
 
 O Load Balancer de camada 4 trabalha no nível de transporte. Ele não entende a regra de negócio nem o conteúdo da requisição HTTP. A decisão normalmente é baseada em informações como:
 
@@ -100,7 +100,7 @@ Casos de uso:
 - Jogos online
 - Sistemas que precisam de alta performance e baixa latência
 
-#### Camada 7 (camada de aplicação)
+### Camada 7 (camada de aplicação)
 
 O Load Balancer de camada 7 trabalha no nível da aplicação. Ele entende detalhes do protocolo usado pela aplicação, principalmente HTTP/HTTPS e, em muitos cenários, gRPC.
 
@@ -139,14 +139,14 @@ Em aplicações web e APIs, o Load Balancer de camada 7 costuma aparecer com mai
 
 ---
 
-### Casos de uso
+## Casos de uso
 
 Normalmente, o Load Balancer é usado em algum serviço de cloud, como AWS, Azure ou GCP. Também é possível usar um Load Balancer fora da cloud, em servidores próprios, mas em cenários reais de escala é mais comum usar soluções gerenciadas ou ferramentas dedicadas, como NGINX, HAProxy, Envoy e Traefik.
 
 Em aplicações grandes, é comum existir balanceamento em mais de um nível. Pode haver um balanceador global distribuindo tráfego entre regiões com base em latência, saúde e proximidade geográfica, e outros balanceadores internos distribuindo tráfego entre serviços e instâncias dentro de cada região.
 
 
-### Trade-offs
+## Trade-offs
 
 - Escalabilidade
 - Confiabilidade

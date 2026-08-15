@@ -4,9 +4,15 @@ O API Gateway é a porta de entrada das requisições para o back-end. Em vez de
 
 Em system design, o API Gateway é comum em arquiteturas com múltiplos serviços, porque ele ajuda a esconder a complexidade interna do sistema. Para o cliente, a API parece unificada; para o sistema, o gateway pode aplicar regras de segurança, roteamento e controle antes de a requisição chegar ao serviço de destino.
 
-![API Gateway](../assets/APIGateway.png)
+```mermaid
+flowchart LR
+    C[Clientes] --> G[API Gateway]
+    G --> U[Serviço de usuários]
+    G --> O[Serviço de pedidos]
+    G --> P[Serviço de pagamentos]
+```
 
-### Para que serve o API Gateway?
+## Para que serve o API Gateway?
 
 As principais responsabilidades de um API Gateway são:
 
@@ -23,7 +29,7 @@ Na prática, ele reduz o acoplamento entre cliente e serviços internos. O front
 
 ---
 
-### Como o API Gateway funciona?
+## Como o API Gateway funciona?
 
 O fluxo normalmente é este:
 
@@ -38,29 +44,29 @@ Isso cria uma camada central de controle na borda da aplicação.
 
 ---
 
-### Benefícios
+## Benefícios
 
-#### 1. Simplificação para o cliente
+### 1. Simplificação para o cliente
 
 Sem API Gateway, um cliente pode precisar chamar vários serviços diferentes e conhecer detalhes de cada um. Com o gateway, ele conversa com uma interface mais consistente.
 
-#### 2. Centralização de responsabilidades transversais
+### 2. Centralização de responsabilidades transversais
 
 Autenticação, rate limit, logging, tracing, CORS e validação podem ser tratados em um único lugar, em vez de serem reimplementados em todos os serviços.
 
-#### 3. Proteção do back-end
+### 3. Proteção do back-end
 
 O gateway bloqueia parte das requisições inválidas ou abusivas antes que elas consumam recursos dos serviços internos. Isso reduz carga desnecessária e ajuda na proteção contra abuso e picos de tráfego.
 
-#### 4. Evolução mais segura da arquitetura
+### 4. Evolução mais segura da arquitetura
 
 Os serviços internos podem mudar de endereço, tecnologia ou protocolo sem necessariamente quebrar os clientes, desde que o contrato exposto pelo gateway continue estável.
 
 ---
 
-### Funcionalidades comuns
+## Funcionalidades comuns
 
-#### Roteamento
+### Roteamento
 
 O gateway pode rotear por:
 
@@ -76,7 +82,7 @@ Exemplo:
 - `/payments` vai para o serviço de pagamentos
 - `/orders` vai para o serviço de pedidos
 
-#### Autenticação e autorização
+### Autenticação e autorização
 
 É comum o API Gateway validar JWT, OAuth, sessão ou API key antes de encaminhar a requisição. Em muitos casos, ele também propaga para os serviços internos informações como:
 
@@ -87,7 +93,7 @@ Exemplo:
 
 Isso evita repetir a mesma lógica básica em todos os serviços, embora validações críticas de negócio ainda possam ser reforçadas internamente.
 
-#### Rate limiting
+### Rate limiting
 
 O rate limit controla quantas requisições um cliente pode fazer em um intervalo de tempo.
 
@@ -108,11 +114,11 @@ Exemplos:
 
 Isso protege a aplicação contra abuso, bots, picos inesperados e uso desproporcional de recursos.
 
-#### Validação
+### Validação
 
 O gateway pode rejeitar cedo requisições malformadas, com campos obrigatórios ausentes, tipos inválidos ou headers incorretos. Isso reduz tráfego inútil para o back-end, mas não substitui totalmente validações internas, porque o serviço ainda precisa se proteger.
 
-#### Transformação e adaptação
+### Transformação e adaptação
 
 Um gateway pode:
 
@@ -123,7 +129,7 @@ Um gateway pode:
 
 Isso é útil quando os clientes precisam de uma API mais estável do que a organização interna dos serviços.
 
-#### Observabilidade
+### Observabilidade
 
 Como todo tráfego passa por esse ponto, o API Gateway é um bom local para coletar:
 
@@ -137,7 +143,7 @@ Isso ajuda bastante na operação e no diagnóstico de problemas.
 
 ---
 
-### API Gateway vs Load Balancer
+## API Gateway vs. Load Balancer
 
 Os dois componentes podem parecer parecidos, mas não têm o mesmo papel.
 
@@ -156,7 +162,7 @@ Em muitas arquiteturas, os dois coexistem. Por exemplo:
 
 ---
 
-### BFF e API Gateway
+## BFF e API Gateway
 
 Em alguns sistemas, existe também o padrão BFF (Backend for Frontend). Nesse caso, em vez de um gateway genérico servir igualmente todos os clientes, pode existir uma camada específica para web, mobile ou parceiros externos.
 
@@ -169,7 +175,7 @@ Nem todo BFF substitui o API Gateway. Muitas vezes:
 
 ---
 
-### Quando faz sentido usar?
+## Quando faz sentido usar?
 
 O API Gateway faz mais sentido quando:
 
@@ -183,7 +189,7 @@ Em sistemas muito simples, com um único serviço pequeno, colocar um API Gatewa
 
 ---
 
-### Trade-offs
+## Trade-offs
 
 Apesar das vantagens, o API Gateway também traz custo.
 
@@ -207,7 +213,7 @@ Ou seja, ele resolve problemas importantes, mas também vira um componente crít
 
 ---
 
-### Boas práticas
+## Boas práticas
 
 1. Manter o gateway stateless sempre que possível.
 2. Escalar horizontalmente, porque ele pode receber alto volume de tráfego.
@@ -221,7 +227,7 @@ Um erro comum é transformar o API Gateway em um "super serviço" com muita regr
 
 ---
 
-### Resumo
+## Resumo
 
 O API Gateway é um componente de borda que centraliza o acesso ao back-end. Ele simplifica a vida do cliente e concentra responsabilidades como roteamento, autenticação, rate limiting, validação, observabilidade e, em alguns casos, transformação de payload e agregação.
 

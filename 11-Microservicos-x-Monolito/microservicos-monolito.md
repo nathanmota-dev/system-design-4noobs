@@ -1,3 +1,5 @@
+# Microserviços x monolito
+
 ## Microserviços
 
 Microserviços, como o próprio nome sugere, são serviços pequenos e independentes. Normalmente, cada microserviço é responsável por uma capacidade específica da aplicação e possui algumas características:
@@ -23,7 +25,7 @@ Microserviços costumam ser mais adequados quando a aplicação possui uma grand
 
 Porém, sua manutenção é mais complexa e custosa do que a de um monolito. Com vários times, cada equipe pode assumir a responsabilidade por um ou mais serviços, trabalhando e realizando deploys de maneira independente.
 
-#### Vantagens
+### Vantagens
 
 - Escalabilidade independente
 - Deploy independente
@@ -34,7 +36,7 @@ Porém, sua manutenção é mais complexa e custosa do que a de um monolito. Com
 
 O isolamento de falhas não é automático. Caso um serviço dependa diretamente de outro, uma falha pode se propagar pelo sistema.
 
-#### Desvantagens
+### Desvantagens
 
 - Maior complexidade operacional
 - Consistência de dados mais difícil
@@ -62,7 +64,7 @@ Normalmente, um monolito possui:
 - Comunicação interna realizada diretamente pelo código
 - Infraestrutura mais simples
 
-#### Vantagens
+### Vantagens
 
 - Desenvolvimento inicial mais simples
 - Deploy mais simples
@@ -73,7 +75,7 @@ Normalmente, um monolito possui:
 - Adequado para aplicações pequenas e médias
 - Adequado para equipes pequenas
 
-#### Desvantagens
+### Desvantagens
 
 - Toda a aplicação precisa ser implantada novamente após uma alteração
 - Escalabilidade normalmente ocorre para a aplicação inteira

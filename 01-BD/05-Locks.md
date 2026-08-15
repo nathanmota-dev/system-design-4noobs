@@ -1,12 +1,14 @@
-### Locks
+# Locks
 
-Locks são usados para casos onde temos processos concorrentes (assim como em SOs) e precisamos garantir que apenas um processo possa acessar um recurso compartilhado (como uma tabela) por vez. 
+Locks são usados em casos nos quais temos processos concorrentes, assim como em sistemas operacionais, e precisamos controlar o acesso a um recurso compartilhado, como uma linha ou tabela.
 
-Exemplo, vamos pensar no mercado livre onde os vendedores tem a quantidade de produtos em estoque, se estoque = 1 e dois usuarios tentam fazer essa compra ao mesmo momento, sem pensar em lock eles consegueriam comprar o produto e o estoque ficaria negativo, lock veio para resolver esse problema.
+Por exemplo, vamos pensar em um marketplace no qual o estoque de um produto é igual a 1. Se dois usuários tentarem comprá-lo ao mesmo tempo, uma condição de corrida pode permitir as duas compras e deixar o estoque negativo. Locks são uma das formas de evitar esse problema.
 
-Dentro de Locks temos o Lock Pessimista e o Lock Otimista. 
+Existem duas abordagens comuns: lock pessimista e lock otimista.
 
-O Lock Pessimista bloqueia o recurso compartilhado até que o processo que o está usando termine, então se tiver outra pessoa tentando fazer a compra conforme aquele exemplo que a gente fez, ela não consegue acessar o recurso até que o primeiro termine. Na prática, no Banco de dados acontece uma trava como
+## Lock pessimista
+
+O lock pessimista bloqueia o recurso compartilhado até que a transação que o está usando termine. Se outra pessoa tentar fazer a compra do exemplo, sua transação precisará esperar. Na prática, no banco de dados, a trava pode ser feita assim:
 
 ```sql
 BEGIN;
@@ -80,29 +82,44 @@ COMMIT;
 
 Ou seja, a Sessão B não consegue "passar na frente". Ela fica bloqueada exatamente na linha do `SELECT ... FOR UPDATE`, porque a Sessão A já travou esse registro. Depois que a Sessão A faz `COMMIT`, a Sessão B continua a execução, lê o valor mais recente do estoque e só então decide se ainda consegue atualizar.
 
-Vantagens do Lock Pessimista:
-- Segurança
-- Simples
-- Não tem updates perdidos
-- Consistência
+### Vantagens do lock pessimista
 
-Desvantagens do Lock Pessimista:
+- Evita atualizações perdidas.
+- Facilita a preservação da consistência em cenários de alta contenção.
+- Torna explícito quem pode alterar o recurso naquele momento.
 
-- Deadlocks, isso ocorre quando por exemplo um processo precisa da tabela de preço e estoque e precisa travar os dois, então ele trava a tabela de preço porém o outro processo trava a tabela de estoque e fica esperando o primeiro terminar, mas nunca termina, então ocorre um deadlock.
-- Bloqueio de recursos
-- Escalabilidade
-- Transações longas
+### Desvantagens do lock pessimista
 
-
-Já o Lock Otimista permite que outros processos acessem o recurso enquanto o primeiro não termina, ou seja, ele não trava o recurso e pra saber que aquele processo foi atualizado ele utiliza um versionamento.
-Como o update precisa atualizar dois dados agora que são o estoque e a versão, o primeiro que conseguir fazer a query consegue fazer, o segundo não consegue falando assim essa versão já foi atualizada. 
+- Deadlocks. Por exemplo, uma transação trava o preço e espera o estoque, enquanto outra trava o estoque e espera o preço. O banco precisa detectar o ciclo e abortar uma delas.
+- Recursos podem ficar bloqueados durante a espera.
+- Menor escalabilidade quando há muita contenção.
+- Transações longas aumentam o tempo de bloqueio.
 
 
-Vantagens do Lock Otimista:
-- Não bloqueia o recurso
-- Escalabilidade
-- Vazão alta de reads
+## Lock otimista
 
-Desvantagens do Lock Otimista:
-- Retries (precisa criar essa lógica pra quando der errado)
-- Complexidade
+O lock otimista permite que outros processos acessem o recurso. Em vez de manter uma trava durante toda a operação, ele usa uma versão para detectar se o registro mudou desde a leitura. A atualização inclui o valor esperado da versão; a primeira transação consegue alterá-lo e a segunda percebe que sua versão ficou desatualizada.
+
+```sql
+UPDATE produtos
+SET estoque = estoque - 1,
+    versao = versao + 1
+WHERE id = 1
+  AND estoque > 0
+  AND versao = 7;
+```
+
+Se nenhuma linha for atualizada, a aplicação sabe que houve conflito e pode reler o registro ou tentar novamente.
+
+
+### Vantagens do lock otimista
+
+- Não mantém o recurso bloqueado durante todo o fluxo.
+- Escala bem quando os conflitos são raros.
+- Mantém uma vazão alta de leituras.
+
+### Desvantagens do lock otimista
+
+- Exige lógica de retry ou tratamento do conflito.
+- Pode desperdiçar trabalho quando muitos processos disputam o mesmo dado.
+- Adiciona complexidade à aplicação.

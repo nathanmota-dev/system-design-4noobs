@@ -1,4 +1,4 @@
-## 1. Cache
+# 1. Cache
 
 Uma das formas mais comuns de aliviar a carga do banco de dados é usar **cache**.
 
@@ -27,13 +27,13 @@ Isso é útil principalmente para dados muito lidos e pouco alterados, como:
 
 O principal benefício é reduzir a pressão no banco e diminuir a latência das respostas.
 
-### Trade-offs de cache:
+## Trade-offs de cache
 
-Se o cache e usado para salvar uma consulta com varios joins e a nossa tabela muda, os dados no cache podem ficar desatualizados. Pra isso existem 3 estratégias principais:
+Se o cache é usado para salvar uma consulta com vários joins e os dados de origem mudam, o valor armazenado pode ficar desatualizado. Para lidar com isso, existem três estratégias principais:
 
-1 - Expiration: os dados no cache são removidos após um tempo definido
-2 - Refresh: os dados no cache são atualizados periodicamente.
-3 - Delete: os dados no cache são removidos quando a tabela muda.
+1. **Expiration:** os dados no cache são removidos após um tempo definido.
+2. **Refresh:** os dados no cache são atualizados periodicamente.
+3. **Delete:** os dados no cache são removidos quando a fonte original muda.
 
 Outros trade-offs:
 

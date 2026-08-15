@@ -1,4 +1,4 @@
-## 2. Índices
+# 2. Índices
 
 Índices são uma das otimizações mais importantes em bancos de dados. mUm índice funciona como uma estrutura auxiliar que permite encontrar dados mais rapidamente sem precisar varrer a tabela inteira. Sem índice, uma busca pode exigir um **full table scan**:
 
@@ -8,7 +8,7 @@ SELECT * FROM users WHERE email = 'user@email.com';
 
 Se a tabela tiver milhões de usuários e não existir índice em `email`, o banco pode precisar verificar muitas linhas até encontrar o resultado.Com índice, o banco consegue localizar o dado de forma muito mais eficiente.
 
-### Quando usar índices?
+## Quando usar índices?
 
 Índices fazem sentido quando uma coluna é usada com frequência em:
 
@@ -31,7 +31,7 @@ Isso melhora consultas como:
 SELECT * FROM users WHERE email = 'user@email.com';
 ```
 
-### Trade-offs dos índices
+## Trade-offs dos índices
 
 Índices melhoram leitura, mas têm custo.
 
@@ -46,7 +46,7 @@ Por isso, não faz sentido criar índice para toda coluna. O ideal é criar índ
 
 ---
 
-### 2.1. Índice B-tree
+## 2.1. Índice B-tree
 
 O índice **B-tree** é o tipo mais comum em bancos relacionais.
 
@@ -69,7 +69,7 @@ Para esse tipo de consulta por intervalo, um índice B-tree costuma fazer bastan
 
 ---
 
-### 2.2. Índice Hash
+## 2.2. Índice Hash
 
 Índices do tipo **hash** são úteis para buscas exatas por igualdade.
 
@@ -97,7 +97,7 @@ Nesse caso, B-tree costuma ser mais adequado.
 
 ---
 
-### 2.3. Índice composto
+## 2.3. Índice composto
 
 Um índice composto envolve mais de uma coluna.
 
@@ -120,7 +120,7 @@ A ordem das colunas importa. Um índice em `(user_id, status)` não é necessari
 
 ---
 
-### 2.4. Outros tipos de índice
+## 2.4. Outros tipos de índice
 
 Além de B-tree, hash e composto, existem outros tipos importantes dependendo do banco e do caso de uso:
 
@@ -130,4 +130,3 @@ Além de B-tree, hash e composto, existem outros tipos importantes dependendo do
 * **BRIN**: útil para tabelas muito grandes com dados naturalmente ordenados, como logs por data.
 
 ---
-

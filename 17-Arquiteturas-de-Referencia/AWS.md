@@ -1,6 +1,6 @@
 # Arquiteturas na AWS
 
-### 1 - Static Website
+## 1. Static Website
 
 Essa arquitetura é indicada para sites estáticos, como landing pages, documentações e SPAs feitas com React, Angular ou Vue quando o build final gera apenas arquivos HTML, CSS, JavaScript e assets.
 
@@ -35,7 +35,7 @@ Limitações:
 
 ---
 
-### 2 - Web App
+## 2. Web App
 
 Essa arquitetura atende aplicações web tradicionais com backend, APIs, renderização server-side ou serviços que precisam rodar continuamente em servidores.
 
@@ -82,7 +82,7 @@ Desvantagens:
 
 ---
 
-### 3 - Aplicação Containerizada com ECS Fargate
+## 3. Aplicação containerizada com ECS Fargate
 
 Essa arquitetura é indicada quando queremos executar aplicações em containers sem administrar instâncias EC2 diretamente.
 
@@ -132,7 +132,7 @@ Desvantagens:
 
 ---
 
-### 4 - Serverless API
+## 4. Serverless API
 
 Essa arquitetura é útil quando queremos executar código somente quando uma requisição chega, sem manter servidores ou containers rodando o tempo todo.
 
@@ -169,7 +169,7 @@ Desvantagens:
 
 ---
 
-### 5 - Async Processing
+## 5. Async Processing
 
 Essa arquitetura é indicada quando uma operação não precisa ser concluída durante a requisição principal. Um exemplo comum é um e-commerce: depois que o pedido é criado, tarefas como emissão de nota, envio de e-mail e atualização de relatórios podem ser processadas em segundo plano.
 
@@ -210,7 +210,7 @@ Limitações:
 
 ---
 
-### 6 - Pub/Sub Fan-Out
+## 6. Pub/Sub Fan-Out
 
 Essa arquitetura resolve o caso em que vários sistemas precisam reagir ao mesmo evento. Se todos consumirem diretamente a mesma fila SQS, uma mensagem processada por um consumidor deixa de estar disponível para os outros. Com fan-out, o evento é publicado uma vez e replicado para múltiplos destinos.
 
@@ -246,7 +246,7 @@ Cuidados:
 
 ---
 
-### 7 - Real Time Streaming
+## 7. Real-time streaming
 
 Essa arquitetura é indicada para ingestão contínua de eventos, como cliques, telemetria, logs, localização, métricas de dispositivos ou eventos de um app mobile.
 
@@ -284,7 +284,7 @@ Cuidados:
 
 ---
 
-### 8 - Data Lake e Analytics
+## 8. Data Lake e Analytics
 
 Essa arquitetura é usada para armazenar grandes volumes de dados e permitir consultas analíticas sem precisar carregar tudo em um banco relacional tradicional.
 

@@ -1,16 +1,16 @@
 # NoSQL
 
-Essa nota complementa o arquivo `02-SQLxNoSql.md`. A ideia aqui nao e aprofundar teoria, e sim passar rapidamente pelos principais tipos de bancos NoSQL, citar nomes comuns e mostrar onde eles costumam aparecer em aplicacoes de system design.
+Essa nota complementa o arquivo [`02-SQLxNoSql.md`](./02-SQLxNoSql.md). A ideia aqui não é aprofundar a teoria, e sim passar rapidamente pelos principais tipos de bancos NoSQL, citar nomes comuns e mostrar onde eles costumam aparecer em aplicações de System Design.
 
 ## Quando NoSQL costuma entrar
 
-- quando o schema muda com frequencia
-- quando o dado nao encaixa bem em tabelas com muitos joins
-- quando precisa escalar horizontalmente com facilidade
-- quando leitura e escrita por chave sao mais importantes que consultas relacionais complexas
-- quando parte do sistema aceita consistencia eventual em troca de disponibilidade e throughput
+- Quando o schema muda com frequência.
+- Quando o dado não se encaixa bem em tabelas com muitos joins.
+- Quando é preciso escalar horizontalmente com facilidade.
+- Quando leitura e escrita por chave são mais importantes do que consultas relacionais complexas.
+- Quando parte do sistema aceita consistência eventual em troca de disponibilidade e throughput.
 
-NoSQL nao significa "melhor que SQL". Normalmente significa que o problema pede outro tipo de modelagem.
+NoSQL não significa "melhor que SQL". Normalmente significa que o problema pede outro tipo de modelagem.
 
 ## Principais tipos
 
@@ -31,23 +31,23 @@ Modelo:
 
 Casos de uso comuns:
 
-- cache
-- sessao de usuario
-- rate limiting
-- feature flags
-- carrinho temporario
-- contadores e leaderboards
+- Cache.
+- Sessão de usuário.
+- Rate limiting.
+- Feature flags.
+- Carrinho temporário.
+- Contadores e leaderboards.
 
-Quando pensar nisso em system design:
+Quando pensar nisso em System Design:
 
-- quando voce sabe exatamente a chave que vai buscar
-- quando precisa de latencia muito baixa
-- quando o volume de leitura e escrita e alto
+- Quando você sabe exatamente qual chave vai buscar.
+- Quando precisa de latência muito baixa.
+- Quando o volume de leitura e escrita é alto.
 
-Observacao:
+Observação:
 
-- Redis aparece muito como cache e armazenamento de dados temporarios
-- DynamoDB aparece bastante em sistemas distribuidos na AWS
+- Redis aparece muito como cache e armazenamento de dados temporários.
+- DynamoDB aparece bastante em sistemas distribuídos na AWS.
 
 ### 2. Document Store
 
@@ -60,7 +60,7 @@ Modelo:
   "user_id": 123,
   "name": "John",
   "address": {
-    "city": "Sao Paulo",
+    "city": "São Paulo",
     "zip": "01000-000"
   },
   "preferences": {
@@ -72,22 +72,22 @@ Modelo:
 
 Casos de uso comuns:
 
-- perfil de usuario
-- catalogo de produtos
-- configuracoes por cliente
-- CMS
-- MVPs com schema mudando rapido
+- Perfil de usuário.
+- Catálogo de produtos.
+- Configurações por cliente.
+- CMS.
+- MVPs com schema mudando rápido.
 
-Quando pensar nisso em system design:
+Quando pensar nisso em System Design:
 
-- quando os dados sao naturalmente um "documento"
-- quando o objeto costuma ser lido e salvo quase inteiro
-- quando o schema precisa evoluir sem muita friccao
+- Quando os dados são naturalmente um "documento".
+- Quando o objeto costuma ser lido e salvo quase inteiro.
+- Quando o schema precisa evoluir sem muita fricção.
 
-Observacao:
+Observação:
 
-- MongoDB e uma escolha comum quando o time quer flexibilidade e modelagem proxima de JSON
-- funciona bem quando o agregado do dominio cabe bem dentro de um documento
+- MongoDB é uma escolha comum quando o time quer flexibilidade e modelagem próxima de JSON.
+- Funciona bem quando o agregado do domínio cabe dentro de um documento.
 
 ### 3. Graph DB
 
@@ -95,26 +95,26 @@ Exemplos: Neo4j, ArangoDB, Amazon Neptune
 
 Modelo:
 
-- nodes e edges
-- o relacionamento e tao importante quanto o dado
+- Nós (*nodes*) e arestas (*edges*).
+- O relacionamento é tão importante quanto o dado.
 
 Casos de uso comuns:
 
-- rede social
-- recomendacao baseada em conexoes
-- deteccao de fraude
-- mapa de dependencias entre servicos
-- permissionamento complexo
+- Rede social.
+- Recomendação baseada em conexões.
+- Detecção de fraude.
+- Mapa de dependências entre serviços.
+- Controle de permissões complexo.
 
-Quando pensar nisso em system design:
+Quando pensar nisso em System Design:
 
-- quando a pergunta principal e "como A se relaciona com B?"
-- quando consultas de caminho e vizinhanca sao frequentes
+- Quando a pergunta principal é "como A se relaciona com B?".
+- Quando consultas de caminho e vizinhança são frequentes.
 
-Observacao:
+Observação:
 
-- graph DB normalmente nao e o banco principal da aplicacao inteira
-- ele brilha quando relacao e navegacao entre entidades sao o centro do problema
+- Um graph DB normalmente não é o banco principal da aplicação inteira.
+- Ele se destaca quando relação e navegação entre entidades são o centro do problema.
 
 ### 4. Wide-Column / Column-Family
 
@@ -122,28 +122,28 @@ Exemplos: Cassandra, HBase, ScyllaDB
 
 Modelo:
 
-- dados distribuidos por chave
-- colunas agrupadas em familias
-- modelagem muito orientada para as queries que o sistema precisa responder
+- Dados distribuídos por chave.
+- Colunas agrupadas em famílias.
+- Modelagem muito orientada às queries que o sistema precisa responder.
 
 Casos de uso comuns:
 
 - eventos
 - telemetria
-- series temporais
-- historico muito grande
+- Séries temporais.
+- Histórico muito grande.
 - cargas com muitas escritas
 
-Quando pensar nisso em system design:
+Quando pensar nisso em System Design:
 
-- quando precisa de alto throughput de escrita
-- quando precisa distribuir dados em varios nos ou varias regioes
-- quando disponibilidade e escala horizontal sao prioridade
+- Quando precisa de alto throughput de escrita.
+- Quando precisa distribuir dados em vários nós ou regiões.
+- Quando disponibilidade e escala horizontal são prioridade.
 
-Observacao:
+Observação:
 
-- Cassandra aparece bastante em cenarios write-heavy
-- nao e banco para joins complexos ou consultas ad hoc ricas
+- Cassandra aparece bastante em cenários com muitas escritas.
+- Não é um banco voltado a joins complexos ou consultas *ad hoc* ricas.
 
 ### 5. Vector DB
 
@@ -156,41 +156,41 @@ Modelo:
 
 Casos de uso comuns:
 
-- busca semantica
+- Busca semântica.
 - RAG
-- recomendacao por similaridade
-- clustering de conteudo
-- deduplicacao aproximada
+- Recomendação por similaridade.
+- Agrupamento de conteúdo.
+- Deduplicação aproximada.
 
-Quando pensar nisso em system design:
+Quando pensar nisso em System Design:
 
-- quando voce quer encontrar "itens parecidos" e nao apenas "itens iguais"
-- quando o sistema usa IA para recuperar contexto
+- Quando você quer encontrar "itens parecidos", e não apenas "itens iguais".
+- Quando o sistema usa IA para recuperar contexto.
 
-Observacao:
+Observação:
 
-- vector DB normalmente complementa outro banco
-- ele nao substitui um banco transacional da aplicacao
+- Um vector DB normalmente complementa outro banco.
+- Ele não substitui um banco transacional da aplicação.
 
-## Resumo rapido
+## Resumo rápido
 
-- Redis: cache, sessao, contador, rate limit
-- MongoDB: documentos flexiveis, catalogos, perfis, configs
-- Neo4j: relacoes complexas e navegacao entre entidades
-- Cassandra: alto volume de escrita e distribuicao
-- Pinecone/Weaviate/Chroma: busca semantica e IA
+- Redis: cache, sessão, contador e rate limit.
+- MongoDB: documentos flexíveis, catálogos, perfis e configurações.
+- Neo4j: relações complexas e navegação entre entidades.
+- Cassandra: alto volume de escrita e distribuição.
+- Pinecone/Weaviate/Chroma: busca semântica e IA.
 
-## Regra pratica
+## Regra prática
 
-Em system design, o raciocinio costuma ser:
+Em System Design, o raciocínio costuma ser:
 
-- se o problema principal e relacionamento forte e integridade transacional, pense primeiro em SQL
-- se o problema principal e escala, flexibilidade de schema ou acesso muito especifico ao dado, algum NoSQL pode fazer mais sentido
+- Se o problema principal é relacionamento forte e integridade transacional, pense primeiro em SQL.
+- Se o problema principal é escala, flexibilidade de schema ou acesso muito específico ao dado, algum NoSQL pode fazer mais sentido.
 
-Na pratica, muitos sistemas usam os dois. Exemplo comum:
+Na prática, muitos sistemas usam os dois. Exemplo comum:
 
-- PostgreSQL para dado transacional
-- Redis para cache
-- MongoDB para documentos flexiveis
+- PostgreSQL para dados transacionais.
+- Redis para cache.
+- MongoDB para documentos flexíveis.
 
-Ou seja: NoSQL raramente entra sozinho; ele costuma entrar para resolver uma parte especifica do sistema muito bem.
+Ou seja: NoSQL raramente entra sozinho; ele costuma entrar para resolver muito bem uma parte específica do sistema.

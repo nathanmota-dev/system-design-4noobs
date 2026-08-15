@@ -1,33 +1,36 @@
 # Polling
 
-Polling é uma técnica que eu já implementei, onde a cada x segundos a gente dispara uma requisição HTTP para verificar alterações.
+Polling é uma técnica na qual, a cada intervalo, o cliente dispara uma requisição HTTP para verificar se houve alterações.
 
 Exemplo:
 
 ```javascript
 setInterval(async () => {
-    const newNotifications = await fetch('/api/notifications/new');
+    const response = await fetch('/api/notifications/new');
+    const newNotifications = await response.json();
+
     if (newNotifications.length > 0) {
         updateNotifications(newNotifications);
     }
 }, 5000);
 ```
 
-Nesse exemplo a cada 5 segundos é enviado uma requisição para verificar se a notificação chegou.
+Nesse exemplo, a cada cinco segundos é enviada uma requisição para verificar se chegou uma notificação.
 
 ## Onde é usado?
 
 O polling é usado em:
 
-- Notificações 
-- Relatórios - PDF tem um tempo de processamento pelo servidor, enquanto o servidor não termina de processar o pdf é feito um pooling verificando isso.
-- Fluxos não críticos - fluxos que não precisam saber exatamente no momento que uma notificação chegou como por exemplo uma mensagem do WhatsApp, ou quando a gente pede um Uber.
+- Notificações que toleram algum atraso.
+- Relatórios: enquanto o servidor processa um PDF, o cliente consulta periodicamente o status.
+- Fluxos não críticos, que não precisam de atualização instantânea.
 
 ## Trade-off
 
-- Alta latência, pouca precisão - Se a gente tem um sistema que precisa de dados atualizando em tempo real com precisão o pooling não é uma boa estratégia porque eu só teria a atualização do estado a cada x segundos.
-- Desperdício de recursos - Várias requisições são feitas e são desperdícadas, ou seja, elas não servem pra nada porque aquilo esperado não foi retornado, se a gente está falando de um sistema pequeno isso não teria problemas, porém um sistema que tem 2 milhões de acesso naquele serviço e é usado polling, muita carga nos servidores poderia ser evitada.
+- **Latência de atualização:** uma mudança pode levar até o próximo intervalo para aparecer no cliente.
+- **Desperdício de recursos:** muitas requisições retornam sem novidades. Em grande escala, esse tráfego pode gerar carga significativa nos servidores.
+- **Simplicidade:** usa HTTP convencional, funciona bem com proxies e é fácil de implementar e depurar.
 
 ## Cenários
 
-Em entrevistas pooling tem que ser a primeira coisa a se pensar, porém só é válido para sistemas pequenos e que não precisam de atualização em tempo real 
+Em entrevistas, polling costuma ser um bom ponto de partida quando o atraso é aceitável. Ele também pode funcionar em sistemas grandes, desde que o intervalo, cache, backoff e capacidade estejam bem dimensionados. Quando o requisito exige atualizações frequentes e imediatas, SSE ou WebSockets podem ser opções melhores.

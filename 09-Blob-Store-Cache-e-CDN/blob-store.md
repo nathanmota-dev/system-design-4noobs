@@ -1,11 +1,11 @@
 # Blob Store (Object Storage)
 
-Quando projetamos a arquitetura de um sistema (System Design), **nunca** devemos armazenar arquivos grandes (mídias, PDFs, binários) diretamente em um banco de dados relacional ou convencional. Isso ocorre devido a vários problemas de escala:
+Quando projetamos a arquitetura de um sistema, normalmente evitamos armazenar arquivos grandes, como mídias, PDFs e binários, diretamente em um banco de dados relacional. Embora existam exceções, separar esses arquivos costuma reduzir problemas de escala:
 
-- **Inflação do Banco de Dados:** O tamanho do banco cresce exponencialmente, tornando backups e replicações extremamente lentos e complexos.
+- **Crescimento do banco de dados:** o banco cresce rapidamente, tornando backups e replicação mais lentos e complexos.
 - **Degradação de Performance:** Queries ficam lentas porque as páginas de dados ficam sobrecarregadas, exigindo mais I/O do disco para ler registros.
 - **Desperdício de Recursos na Escala:** Para escalar leituras usando réplicas de banco de dados, você acabaria duplicando arquivos pesados desnecessariamente em servidores caros.
-- **Custo Ineficiente:** Armazenar dados brutos em discos de alta performance de bancos de dados (como SSDs provisionados) é infinitamente mais caro do que usar storages dedicados.
+- **Custo ineficiente:** armazenar dados brutos em discos de alto desempenho costuma ser mais caro do que usar armazenamento de objetos.
 
 Para resolver isso, separamos o armazenamento de arquivos da lógica de dados estruturados usando duas abordagens principais: **File System** e **Blob Store**.
 
@@ -31,7 +31,8 @@ Cada objeto em um Blob Store é composto por três partes essenciais:
 - **Dados (O BLOB):** O arquivo binário bruto (Fotos, Vídeos, Documentos, Áudios, Logs, arquivos `.json`, `.csv`, etc.).
 - **Metadados:** Informações sobre o arquivo (como `content-type`, `created-at`, chaves de criptografia ou tags customizadas).
 
-### Vantagens Principais para System Design:
+### Principais vantagens para System Design
+
 - **Escalabilidade Horizontal Infinita:** Como o acesso é feito diretamente via chave (chave-valor), o sistema busca o arquivo sem precisar percorrer uma árvore de diretórios. A performance permanece constante se você tiver 10 ou 10 bilhões de arquivos.
 - **Custo Altamente Otimizado:** O custo por GB armazenado é extremamente baixo se comparado a qualquer outra solução.
 - **Acesso Descentralizado via API:** Os arquivos são expostos via HTTP/HTTPS (APIs REST). Isso permite que o cliente final (App/Web) faça o download do arquivo ou upload (via *Presigned URLs*) diretamente do S3, sem sobrecarregar os servidores da sua aplicação.
@@ -46,14 +47,17 @@ Ao desenhar a arquitetura com Blob Stores, existem duas decisões fundamentais q
 
 O banco de dados relacional (ou NoSQL) continuará guardando a referência do arquivo. Existem duas abordagens comuns para isso:
 
-1. **Salvar a URL Absoluta (Link Completo):** - *Como funciona:* Salva-se a string inteira no banco (ex: `https://meubucket.s3.amazonaws.com/uploads/UUID.png`).
-* *Prós:* O backend ou o frontend só precisa ler o campo e já pode renderizar ou usar o link direto.
-* *Contras:* Se você precisar migrar de provedor (ex: ir para o Azure Blob Storage) ou mudar o nome do bucket, terá que rodar um script para atualizar milhões de linhas no banco de dados.
+#### Salvar a URL absoluta
+
+- **Como funciona:** salva-se a string inteira no banco, como `https://meubucket.s3.amazonaws.com/uploads/UUID.png`.
+- **Prós:** o backend ou o frontend só precisa ler o campo para usar o link.
+- **Contras:** se for necessário migrar de provedor ou mudar o nome do bucket, pode ser preciso atualizar muitas linhas no banco de dados.
 
 
-2. **Salvar apenas o Path/Key (Recomendado):**
-* *Como funciona:* Salva-se apenas o identificador/caminho relativo (ex: `uploads/UUID.png`). A URL base do bucket (`https://meubucket.s3.amazonaws.com/`) fica armazenada como uma **variável de ambiente** da aplicação.
-* *Prós:* Alta flexibilidade. Se o bucket mudar, você altera apenas uma linha de configuração no ambiente e o backend se encarrega de concatenar a URL base com a chave antes de enviar para o cliente.
+#### Salvar apenas o path/key
+
+- **Como funciona:** salva-se apenas o identificador ou caminho relativo, como `uploads/UUID.png`. A URL base fica na configuração da aplicação.
+- **Prós:** se o bucket ou domínio mudar, basta alterar a configuração usada para construir a URL.
 
 ---
 
@@ -63,16 +67,19 @@ Em arquiteturas tradicionais, o cliente envia o arquivo para o seu backend, e o 
 
 A estratégia moderna para larga escala é o uso de **Presigned URLs**.
 
-* **O Fluxo Eficiente (Passo a Passo):**
+O fluxo eficiente funciona assim:
+
 1. O cliente (App/Web) avisa ao seu Backend: *"Quero fazer upload de uma foto chamada perfil.jpg"*.
 2. O seu Backend (que possui as credenciais seguras da AWS) faz uma requisição rápida ao S3 solicitando uma **URL Pré-Assinada** de `PUT` para aquela chave específica, definindo um tempo curto de expiração (ex: 5 minutos).
 3. O S3 retorna essa URL temporária e autenticada para o seu Backend, que a repassa para o Cliente.
 4. O Cliente faz o upload do arquivo binário **diretamente para o S3** através dessa URL, sem trafegar nenhum byte do arquivo pelo seu servidor.
-5. Após o sucesso do upload, o cliente avisa o backend para salvar a chave do objeto no banco de dados.
+5. Após o upload, o cliente avisa o backend ou um evento do storage confirma a conclusão para que a aplicação valide o objeto e salve sua chave no banco de dados.
 
 
-* **Vantagens em System Design:** - **Economia de Recursos:** Reduz drasticamente a carga de rede e CPU dos seus servidores de aplicação.
-* **Segurança:** O cliente nunca tem acesso às credenciais globais do seu bucket, apenas a uma permissão temporária e restrita para um único arquivo.
+Vantagens em System Design:
+
+- **Economia de recursos:** reduz a carga de rede e CPU dos servidores de aplicação.
+- **Segurança:** o cliente não recebe as credenciais do bucket, apenas uma permissão temporária e restrita. O backend ainda deve limitar tipo, tamanho, chave e tempo de validade e validar o arquivo após o upload.
 
 ---
 

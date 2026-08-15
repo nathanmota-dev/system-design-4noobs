@@ -1,11 +1,11 @@
-## Sharding:
+# Sharding e particionamento
 
 Basicamente, em BDs com grande escala, é comum dividir os dados com o objetivo de diminuir a latência, melhorar o tempo de consulta, leitura e escrita e distribuir melhor a carga.
 
 Dentro dessa divisão, podemos pensar em duas abordagens:
 
-1 - Particionamento vertical
-2 - Particionamento horizontal
+1. Particionamento vertical.
+2. Particionamento horizontal.
 
 No particionamento vertical, as colunas ou tabelas do BD são divididas em múltiplos bancos de dados de acordo com a responsabilidade. Exemplo: assim como em microserviços, em que cada microserviço pode ter seu próprio DB cuidando de apenas uma parte do domínio, como um BD somente para users, a lógica é parecida: cada BD passa a cuidar de apenas uma coisa.
 Outra forma de particionar verticalmente é separar a responsabilidade por colunas. Vamos supor que estamos usando 3 bancos de dados: os 3 podem ter tabelas relacionadas ao mesmo contexto, mas com colunas diferentes em cada um.
@@ -14,21 +14,23 @@ Pontos positivos: separação de responsabilidades e possibilidade de partes dif
 
 Já no particionamento horizontal, a ideia é separar as linhas em diferentes bancos de dados. Exemplo: a linha com `user_id = 1` fica no banco de dados 1, a linha com `user_id = 2` fica em outro banco de dados, e assim vai.
 Quando esse particionamento horizontal é distribuído entre múltiplos bancos, normalmente é isso que chamamos de sharding.
-Pontos negativos disso: quando precisamos fazer uma consulta, precisamos de alguma técnica para localizar os dados e saber em qual banco estará o id daquele user. Para isso, existem 3 formas comuns:
+Pontos negativos disso: quando precisamos fazer uma consulta, precisamos de alguma técnica para localizar os dados e saber em qual banco estará o ID daquele usuário. Para isso, existem três formas comuns.
 
-1 - Key-range
+## Estratégias de distribuição
+
+### 1. Por faixa (*key range*)
 
 No key-range, você delimita a faixa de ids que cada banco vai armazenar. Por exemplo: no banco 1 ficam os ids de 1 a 10.000; no banco 2, de 10.001 a 20.000; e no banco 3, de 20.001 a 30.000.
 Ponto negativo disso: vamos supor que o app escale e passe de 30.000 ids. Se você redefinir essas faixas, pode precisar realocar muitos dados. Por exemplo, se agora o BD 1 vai de 0 a 100.000, o 2 de 100.001 a 200.000 e o 3 de 200.001 a 300.000, será necessário mover vários ids antigos para a nova faixa correta.
 
-2 - Módulo
+### 2. Módulo
 
 Na estratégia de módulo, funciona assim:
 
 Você pega o id do usuário, calcula o módulo pela quantidade de BDs distribuídos e usa esse resultado para definir onde o dado será alocado. Exemplo: `id % quantidade_de_bancos`.
 Ponto negativo: se você acrescentar um banco a mais, por exemplo, dados distribuídos em 3 bancos e depois em 4, a conta do módulo muda e você vai precisar realocar os dados.
 
-3 - Consistent hashing
+### 3. *Consistent hashing*
 
 O consistent hashing surgiu para melhorar o rebalanceamento dos dados. Nessa estratégia, tanto os dados quanto os bancos são posicionados em um espaço de hash, e cada dado é alocado no primeiro nó responsável a partir do hash gerado para aquela chave.
 Exemplo simplificado: vamos supor que temos o `db1` em 250.000, o `db2` em 500.000, o `db3` em 750.000 e o `db4` em 1.000.000. Se o hash de um dado for 900.000, ele ficaria alocado no `db4`.
@@ -36,7 +38,7 @@ Outro ponto: ele facilita o rebalanceamento porque, se precisarmos acrescentar u
 
 ---
 
-## Partitions
+## Particionamento
 
 Partitions seguem uma ideia parecida no sentido de dividir os dados em múltiplas partes, mas normalmente essa separação é lógica dentro do próprio banco ou da própria tabela. Dependendo da tecnologia, isso pode ser feito por faixa, hash ou outras regras.
 De forma simplificada, podemos pensar em duas formas de trabalhar com partições:
@@ -59,18 +61,18 @@ Dessa forma, conseguimos deixar os BDs mais quentes com conteúdos recentes e de
 
 ---
 
-## O que é o Apache ZooKeeper? E como ele é importante nesse cenário que vimos acima?
+## O que é o Apache ZooKeeper e como ele é importante nesse cenário?
 
-Basicamente esse serviço é como se fosse um zelador de serviços distribuídos, através dele é possível gerenciar múltiplos micro-serviços, aplicações distribuídas facilitando a comunicação entre os serviços e todo esse gerenciamento. Ele basicamente expõe uma interface simples (parecida com um sistema de arquivos de pastas e arquivos, chamados de znodes) para resolver os problemas mais complexos de sistemas distribuídos:
+Basicamente, esse serviço funciona como um coordenador de sistemas distribuídos. Ele expõe uma interface simples, parecida com um sistema de arquivos, composta por nós chamados de *znodes*, para resolver problemas de coordenação:
 
-- Gerenciamento de Configuração: Se você tem 50 instâncias de um serviço rodando e precisa mudar uma variável de ambiente, você muda no ZooKeeper. Ele avisa e atualiza todas as instâncias em tempo real.
+- Gerenciamento de configuração: as instâncias podem observar mudanças em dados de configuração mantidos no ZooKeeper. Segredos e variáveis de ambiente, porém, normalmente exigem ferramentas específicas de configuração e *secrets management*.
 - Sincronização Distribuída (Locks): Garante que duas máquinas não tentem executar a mesma tarefa crítica exatamente ao mesmo tempo, evitando corrupção de dados.
 - Eleição de Líder (Leader Election): Se o servidor principal (Leader) de um sistema cair, o ZooKeeper coordena os nós restantes (Followers) para eleger um novo líder de forma limpa e automática.
 - Service Discovery: Ajuda os nós a descobrirem quais outros servidores estão ativos e prontos para receber requisições na rede.
 
-Como ele é o cérebro da coordenação, ele não pode cair. Por isso, o ZooKeeper roda em um cluster de servidores (chamado de Ensemble).
+Como ele participa da coordenação, precisa ser altamente disponível. Por isso, o ZooKeeper roda em um conjunto de servidores chamado *ensemble*.
 
---- 
+---
 
 ## Teorema de CAP
 
@@ -78,6 +80,6 @@ Como ele é o cérebro da coordenação, ele não pode cair. Por isso, o ZooKeep
 - Availability
 - Partition Tolerance
 
-O teorema de CAP afirma que é impossível trabalhar com Sistemas Distribuídos e ter as 3 coisas acima ao mesmo tempo que são Consistência, Alta Dispobilidade e Tolerancia a Partições, caso seu sistema tenha dois desse, ele não vai ter o terceiro. 
+O teorema CAP afirma que, quando ocorre uma partição de rede, um sistema distribuído precisa escolher entre consistência e disponibilidade. A tolerância a partições não é uma escolha prática nesse momento: o sistema precisa lidar com a falha de comunicação.
 
 ---

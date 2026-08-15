@@ -1,71 +1,58 @@
-# Authentication e Authorization
+# Autenticação e autorização
 
-Authentication é o ato de login em um app, já a Authorization é o ato de verificar se o usuário tem permissão para acessar um recurso.
+Autenticação é o processo de verificar quem o usuário é. Autorização é o processo de verificar se esse usuário tem permissão para executar uma ação ou acessar um recurso.
 
-### Autenticação
+## Autenticação
 
-Normalmente envolve
+A autenticação normalmente utiliza um ou mais fatores:
 
-- Segredo
-- Posse
-- Biometria
+- **Conhecimento:** algo que a pessoa sabe, como uma senha.
+- **Posse:** algo que a pessoa possui, como um celular, token ou chave física.
+- **Inerência:** algo que faz parte da pessoa, como biometria facial ou impressão digital.
 
-E pra isso normalmente usa-se 
+Quando o sistema combina fatores de categorias diferentes, temos autenticação multifator, como 2FA ou MFA.
 
-- Passwords
-- Tokens
-- Face Id
-- Biometria
+### Sessões e tokens
 
-Diferenças entre token e sessions
+Em uma sessão, o servidor mantém o estado de autenticação em um armazenamento, como Redis, e o cliente recebe apenas um identificador de sessão com tempo de expiração.
 
-Uma sessão é uma conexão entre um cliente e um servidor que e armazenado em algum lugar como num Redis por exemplo que armazena um Session ID com um tempo de expiração definido
+Um token carrega informações que permitem validar o acesso. Um JWT, por exemplo, é um formato de token assinado que pode ser validado sem consultar uma sessão a cada requisição. O trade-off é que a revogação antes da expiração exige uma estratégia adicional, como tokens curtos, rotação ou uma lista de revogação.
 
-Já token é um identificador que permite acesso a um recurso.
+### Tecnologias e padrões comuns
 
-Serviços de Auth
-- Cognito - Serviço de autenticação e autorização da AWS
-- OAuth - Serviço de autenticação via rede social ou link externo onde vc delega o login
-- JWT - Serviço de autenticação via token, o bom dele é que não precisa de armazenamento de sessão. Trade-off é que como vc passou o token para o usuário, se ele for mal implementado, pode ter problema de SPOOFING que é um problema de segurança, além que é mais difícil de revogar, porque é um token que foi dado ao cliente e normalmente dentro do próprio token tem a data de expiração. Funciona bem em microserviços.
-- 2FA - Serviço de autenticação via código enviado para o usuário
-- Passkey - Serviço de autenticação via chave física ou biometria
-- OpenID Connect - Serviço de autenticação via token, mas com suporte a provedores de identidade externos.
-- Identity Provider - Serviço de autenticação via token, mas com suporte a provedores de identidade externos. Exemplo: Keycloak, Cognito, Auth0.
+- **Amazon Cognito, Keycloak e Auth0:** provedores ou plataformas de identidade.
+- **OAuth 2.0:** protocolo de autorização delegada. Ele permite que uma aplicação acesse recursos em nome do usuário sem receber sua senha.
+- **OpenID Connect (OIDC):** camada de identidade construída sobre OAuth 2.0, usada para autenticação e *single sign-on*.
+- **JWT:** formato de token; não é, por si só, um serviço nem um protocolo completo de autenticação.
+- **Passkey:** credencial baseada em criptografia de chave pública, normalmente desbloqueada no dispositivo por biometria ou PIN.
+- **2FA/MFA:** uso de dois ou mais fatores de autenticação.
 
 ## Autorização
 
-Autorização é o ato de verificar se o usuário tem permissão para acessar um recurso. Normalmente usa-se 
+Autorização verifica se o usuário autenticado pode acessar um recurso. Alguns modelos comuns são:
 
--  RBAC - Role Based Access Control - Autorização baseada em papéis, onde o usuário é associado a um papel e o papel tem permissões associadas a ele.
-- ABAC - Attribute Based Access Control - Autorização baseada em atributos, onde o usuário tem permissões associadas a atributos do recurso.
-- ACL - Access Control List - Autorização baseada em lista de permissões, onde o usuário tem permissões associadas a um recurso específico.
-- GRANULAR - Autorização baseada em permissões granulares, onde o usuário tem permissões associadas a ações específicas em um recurso.
+- **RBAC — Role-Based Access Control:** permissões são associadas a papéis, e os usuários recebem esses papéis.
+- **ABAC — Attribute-Based Access Control:** a decisão usa atributos do usuário, do recurso e do contexto.
+- **ACL — Access Control List:** cada recurso mantém uma lista de identidades e permissões.
+- **Permissões granulares:** ações específicas, como `order:read` e `order:cancel`, são avaliadas individualmente.
 
-System Design com Auth
+## System Design com autenticação e autorização
 
-Nesse fluxo do exemplo a gente teria um Load Balancer, ou Proxy Reverso, ou Web Server e a camada de autenticação ficaria nessa camada. Apos essa camada teriamos um Nginx ou Apache com o web server que aponta pro Application Server tambem usando Nginx ou Apache. Porem o web server pode ser responsável pela autenticação. Isso pode ser feito tambem pelo Api Gateway. Isso pode ser feito pelo um Lambda. Ou seja, tem multiplas formas de implementar autenticação.
+No fluxo abaixo, uma camada de borda, como API Gateway ou proxy reverso, pode validar o token antes de encaminhar a requisição. A autorização de domínio, porém, também deve ser verificada pelo serviço responsável pelo recurso. Validar apenas na borda é arriscado porque chamadas internas ou novos caminhos podem contornar essa verificação.
 
-![auth](../assets/auth.png)
+![Fluxo de autenticação e autorização](../assets/auth.png)
 
-Logo apos a camada de autenticação, temos a camada de autorização. A camada de autenticação já validou o usuário então a próxima camada não precisa fazer isso novamente, onde a camada de autorização apenas verifica se o usuário tem permissão para acessar o recurso e por fim isso é executado na camada de Domain que seria a camada da lógica de negócio (API Backend).
+Depois da autenticação, a aplicação identifica o usuário. Na autorização, verifica se ele pode executar aquela ação sobre aquele recurso. Por fim, a camada de domínio executa a regra de negócio.
 
 ---
 
-### Proteção de Dados
+## Proteção de dados
 
-- Acesso não autorizado
-- Leaks
-- Falhas de configuração
-- Ameaças internas
-- Integrações
-- Autenticação externa
+Alguns riscos são acesso não autorizado, vazamentos, falhas de configuração, ameaças internas e integrações comprometidas. Para reduzi-los:
 
-Para proteger os dados, vamos buscar seguir alguns princípios de segurança:
-
-- Princípios de menor privilégio - O usuário deve ter apenas os privilégios necessários para realizar suas tarefas.
-- Rotação de chaves - As chaves de acesso devem ser rotacionadas regularmente para evitar serem afetadas
-- LGPD e GRPR - Os dados devem ser protegidos de acordo com as leis de proteção de dados (LGPD) e os direitos do usuário (GRPR).
-- Criptografar todas as requests - Todas as requests devem ser criptografadas para evitar que sejam interceptadas.
-- Usar TLS para proteger os dados em trânsito - TLS é um protocolo de criptografia que protege os dados em trânsito.
-- HTTPs - HTTPS é uma extensão do HTTP que adiciona criptografia TLS para proteger os dados em trânsito.
-- Dados criptografados no banco de dados - Os dados devem ser criptografados no banco de dados para evitar que sejam acessados por terceiros.
+- **Princípio do menor privilégio:** cada usuário ou serviço recebe apenas as permissões necessárias.
+- **Rotação de chaves e segredos:** credenciais devem ter ciclo de vida definido e ser armazenadas fora do código.
+- **LGPD e GDPR:** coleta, retenção e uso dos dados devem respeitar as leis e os direitos aplicáveis.
+- **Criptografia em trânsito:** use HTTPS/TLS nas comunicações externas e, quando necessário, entre serviços internos.
+- **Criptografia em repouso:** proteja bancos, backups e objetos armazenados.
+- **Auditoria:** registre ações sensíveis sem gravar senhas, tokens ou dados pessoais desnecessários.

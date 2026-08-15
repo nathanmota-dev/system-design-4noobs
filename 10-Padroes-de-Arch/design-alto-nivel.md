@@ -10,7 +10,7 @@ Vamos supor que, após fazermos algumas perguntas ao entrevistador, chegamos aos
 - Precisamos lidar com 10 milhões de URLs únicas.
 - Precisamos lidar com 1 milhão de requisições.
 
-# Etapas
+## Etapas
 
 A primeira etapa seria pensar em formas de lidar com a geração de URLs únicas. Existem algumas maneiras de fazer isso; não precisamos conhecer todos os detalhes, apenas levantar uma ideia geral do que pode ser feito. Por exemplo:
 

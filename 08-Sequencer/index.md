@@ -1,22 +1,26 @@
-# Sequencer / snowwflake
+# Sequencer e Snowflake IDs
 
-Snowflake é uma técnica que foi criada pelo Twitter para conseguir lidar com o problema de geração de IDs únicos em um ambiente distribuído, onde se a gente tem vários servidores e vários bancos de dados, se cada um deles precisa gerar IDs únicos, pode ser que um servidor gere um id que colida com outro, por isso essa técnica sugiu.
+Snowflake é uma técnica criada pelo Twitter para gerar IDs únicos em um ambiente distribuído. Quando vários servidores geram identificadores de forma independente, pode acontecer uma colisão; o Snowflake evita esse problema sem depender de um contador central a cada operação.
 
-O objetivo dela é garantir 3 coisas
-1 - Performance
-2 - Nenhum conflito de ID
-3 - Algum tipo de ordenação temporal (Não vai garantir uma ordenção 100% em tempo real, mas sim uma ordenação aproximada, pra ordenção em time perfeita é praticamente impossível)
+O objetivo é garantir três características:
+
+1. Alto desempenho.
+2. Ausência de conflito entre IDs, desde que cada worker tenha um identificador único.
+3. Ordenação temporal aproximada. O ID não garante uma ordem global perfeita quando existem diferenças entre os relógios das máquinas.
 
 Ela funciona assim:
 
-Primeiro, o algoritmo tem 64 bits, divididos em 4 partes:
-- 1 bit para o sign (sinal)
-- 41 bits para o timestamp
-- 10 bits para o worker ID
-- 12 bits para o sequencial
+O algoritmo usa 64 bits, divididos em quatro partes:
 
-Os bits de timestamp representam o momento em que o ID foi gerado por data, em milissegundos desde a época Unix (1970-01-01 00:00:00 UTC), isso permite que o ID seja ordenado temporalmente. Isso é essencial para garantir que em buscas por tweets em uma ordem de data, exemplo do dia 1 ao dia 4 de um mês, os tweets sejam retornados em ordem cronológica, diminuindo a carga do BD em consultas. O máximo são 2^41 - 1 milissegundos, ou seja, aproximadamente 69 anos.
+| Bits | Campo | Função |
+|---:|---|---|
+| 1 | Sinal | Mantém o ID positivo em uma representação com sinal. |
+| 41 | Timestamp | Representa o tempo desde uma época definida pela implementação. |
+| 10 | Worker ID | Identifica o worker que gerou o ID. |
+| 12 | Sequência | Diferencia IDs gerados pelo mesmo worker no mesmo milissegundo. |
 
-Os bits de worker ID representam o ID do worker que gerou o ID, e os bits de sequencial representam o número de IDs gerados por worker em um determinado timestamp. Como são 10 bits para o worker ID e 12 bits para o sequencial, o algoritmo pode suportar até 1024 workers e 4096 IDs por worker em um determinado timestamp. Isso significa que a gente poderia ter 1024 servidores e atribuir um id pra cada um, a gente trata como worker e não servidor porque não necessáriamente precisamos de um servidor para cada worker ou utilizar um servidor, poderia ser uma lambda por exemplo.
+Os bits de timestamp representam, em milissegundos, o tempo desde uma época definida pela implementação. Isso permite ordenar os IDs aproximadamente pelo momento de criação e melhora a localidade em índices. Com 41 bits, o intervalo disponível é de aproximadamente 69 anos.
 
-Os bits sequenciais representam o número de IDs gerados por worker em um determinado timestamp. Quando o sequencial chega a 4096, ele é resetado para 0 e o timestamp é incrementado para o próximo worker.
+Com 10 bits para o worker ID e 12 bits para a sequência, essa configuração suporta até 1.024 workers e 4.096 IDs por worker em cada milissegundo. Um worker não precisa corresponder diretamente a um servidor físico, mas seu identificador não pode colidir com o de outro gerador ativo.
+
+Quando um worker esgota as 4.096 combinações no mesmo milissegundo, ele precisa esperar o próximo milissegundo antes de reiniciar a sequência. Outro cuidado importante é o *clock rollback*: se o relógio da máquina voltar no tempo, a implementação precisa esperar, rejeitar a geração ou usar outra estratégia para não produzir IDs repetidos.

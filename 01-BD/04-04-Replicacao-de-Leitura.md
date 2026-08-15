@@ -1,4 +1,4 @@
-## 4. Replicação de leitura
+# 4. Replicação de leitura
 
 Em muitas aplicações, o volume de leitura é muito maior do que o volume de escrita. Exemplo: em uma rede social, uma pessoa publica um post, mas centenas ou milhares de pessoas podem ler esse mesmo post. Nesse tipo de cenário, podemos usar **read replicas**.
 
@@ -18,7 +18,7 @@ Reads  -> Read Replicas
 
 Isso ajuda a distribuir a carga e evita que todas as leituras e escritas concorram pelo mesmo banco.
 
-### Exemplo prático
+## Exemplo prático
 
 Em uma aplicação como Twitter/X ou LinkedIn:
 
@@ -29,7 +29,7 @@ Em uma aplicação como Twitter/X ou LinkedIn:
 
 Nesse caso, existe muito mais leitura do que escrita. Então faz sentido escalar leitura com réplicas.
 
-### Trade-off: replication lag
+## Trade-off: replication lag
 
 O principal problema é o atraso de replicação.
 
@@ -55,4 +55,3 @@ Nesses casos, é comum:
 * aceitar mais latência para garantir consistência.
 
 ---
-

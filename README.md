@@ -58,9 +58,13 @@ Estrutura do repositório:
 | 13 | [Deploy, Infra e Cloud](./12-Deploy-Infra-e-Cloud/) | Implantação, infraestrutura e serviços de cloud |
 | 13.1 | ┗ [deploy.md](./12-Deploy-Infra-e-Cloud/deploy.md) | Estratégias e práticas de deploy |
 | 14 | [Observabilidade](./13-Observabilidade/) | Monitoramento, logs, métricas e rastreamento de sistemas |
+| 14.1 | ┗ [index.md](./13-Observabilidade/index.md) | Logs, métricas, traces, alertas e SLOs |
 | 15 | [Resiliência](./14-Resiliencia/) | Tolerância a falhas e recuperação de sistemas |
+| 15.1 | ┗ [index.md](./14-Resiliencia/index.md) | Timeouts, retries, circuit breakers e degradação controlada |
 | 16 | [Sistemas Distribuídos](./15-Sistemas-Distribuidos/) | Consistência, disponibilidade e coordenação distribuída |
+| 16.1 | ┗ [index.md](./15-Sistemas-Distribuidos/index.md) | Replicação, particionamento, consenso e falhas parciais |
 | 17 | [Segurança](./16-Seguranca/) | Práticas e mecanismos de segurança para sistemas e aplicações |
+| 17.1 | ┗ [index.md](./16-Seguranca/index.md) | Threat modeling, identidade, autorização e proteção de dados |
 | 18 | [Arquiteturas de Referência](./17-Arquiteturas-de-Referencia/) | Exemplos de arquiteturas de referência |
 | 18.1 | ┗ [AWS.md](./17-Arquiteturas-de-Referencia/AWS.md) | Arquiteturas e serviços de referência na AWS |
 | 19 | [Real-time](./18-Real-time/) | Comunicação e atualização de dados em tempo real |
@@ -69,5 +73,7 @@ Estrutura do repositório:
 | 19.3 | ┗ [3-Websockets.md](./18-Real-time/3-Websockets.md) | Comunicação bidirecional com WebSockets |
 | 20 | [Requisitos e Estimativas](./19-Requistios-e-Estimativas/) | Requisitos, capacidade e planejamento de sistemas |
 | 20.1 | ┣ [1-requisitos..md](./19-Requistios-e-Estimativas/1-requisitos..md) | Levantamento e definição de requisitos |
-| 20.2 | ┗ [2-redundancia.md](./19-Requistios-e-Estimativas/2-redundancia.md) | Redundância e disponibilidade |
-Os módulos 14 a 17 ainda serão preenchidos conforme os estudos avançarem.
+| 20.2 | ┣ [2-redundancia.md](./19-Requistios-e-Estimativas/2-redundancia.md) | Redundância e disponibilidade |
+| 20.3 | ┗ [3-estimativas.md](./19-Requistios-e-Estimativas/3-estimativas.md) | Estimativas de capacidade e dimensionamento |
+
+Cada módulo busca explicar o tema, conectá-lo ao contexto de System Design e apresentar os principais trade-offs das decisões arquiteturais.

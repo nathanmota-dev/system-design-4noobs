@@ -21,14 +21,11 @@ Esse é o principal trade-off: filas não são a melhor escolha quando o caso ex
 
 ---
 
-## Delivery semantics / Semântica de Entrega
+## Semântica de entrega (*delivery semantics*)
 
-- At-most-once: a mensagem é entregue no máximo uma vez. Nesse modelo, ela pode ser perdida se houver falha no meio do processamento. É útil quando perder um evento ocasionalmente é aceitável.
-Exemplo de uso: streaming de vídeo ou métricas não críticas.
-- At-least-once: a mensagem é entregue pelo menos uma vez. Esse é o modelo mais comum, porque prioriza não perder mensagens, mesmo que em alguns casos elas sejam processadas mais de uma vez.
-Normalmente essa estratégia é combinada com idempotência. Exemplo: em pagamentos, a mensagem pode ser reenviada após uma falha; sem idempotência, o sistema corre o risco de cobrar duas vezes.
-- Exactly-once: a mensagem é processada exatamente uma vez. É um objetivo desejável, mas caro e difícil de garantir de ponta a ponta em sistemas distribuídos.
-Na prática, isso exige coordenação entre broker, consumidor e sistema de destino. Por isso, em muitos cenários o que se implementa de fato é `at-least-once` com idempotência, que entrega um resultado mais realista e operacionalmente viável.
+- **At-most-once:** a mensagem é entregue no máximo uma vez. Nesse modelo, ela pode ser perdida se houver falha no meio do processamento. É útil quando perder um evento ocasionalmente é aceitável, como em métricas não críticas.
+- **At-least-once:** a mensagem é entregue pelo menos uma vez. Esse é o modelo mais comum, porque prioriza não perder mensagens, mesmo que em alguns casos elas sejam processadas mais de uma vez. Normalmente essa estratégia é combinada com idempotência. Em pagamentos, por exemplo, a mensagem pode ser reenviada após uma falha; sem idempotência, o sistema corre o risco de cobrar duas vezes.
+- **Exactly-once:** a mensagem é processada exatamente uma vez. É um objetivo desejável, mas caro e difícil de garantir de ponta a ponta em sistemas distribuídos. Na prática, isso exige coordenação entre broker, consumidor e sistema de destino. Por isso, em muitos cenários implementa-se `at-least-once` com idempotência.
 
 ---
 
@@ -51,18 +48,18 @@ Essa é só uma forma de particionar. Dependendo do caso, a divisão pode ser po
 
 ![Queue-Partitioning](../assets/Queue-Partitioning.png)
 
- ---
+---
 
- ## Consumers ou Consumidores
+## Consumidores
 
 Muita gente pensa na fila como se ela "empurrasse" a mensagem para o consumidor. Em muitos sistemas, o comportamento real é o contrário: o consumidor faz um `pull` da mensagem. Isso acontece porque a fila nem sempre sabe quando o processamento terminou com sucesso; quem sabe disso é o consumidor.
 
 O fluxo costuma ser este:
 
-1. Buscar a mensagem na fila
-2. Processar a mensagem
-3. Avisar que o processamento terminou (`acknowledge`)
-4. Remover a mensagem da fila ou marcar o offset como consumido
+1. Buscar a mensagem na fila.
+2. Processar a mensagem.
+3. Avisar que o processamento terminou (`acknowledge`).
+4. Remover a mensagem da fila ou marcar o offset como consumido.
 
 É nesse ponto que entram as semânticas de entrega, como `at-most-once` e `at-least-once`.
 
@@ -70,16 +67,16 @@ Sistemas como o Kafka usam offset. Nesse modelo, o consumidor registra qual foi 
 
 ---
 
-### Escalabilidade de filas - Como escalar?
+## Escalabilidade de filas: como escalar?
 
 Para escalar um sistema baseado em filas, normalmente aumentamos a capacidade de processamento paralelo ou dividimos melhor a carga. As principais estratégias são:
 
-1. Particionamento de filas
-2. Mais filas
-3. Mais consumidores
-4. Processamento em batch: em vez de processar uma mensagem por vez, o sistema processa várias em conjunto
-5. Autoscaling: aumentar ou reduzir consumidores de acordo com a carga
-6. Filas com prioridade: separar eventos mais urgentes dos menos urgentes, conforme a regra de negócio
+1. Particionamento de filas.
+2. Mais filas.
+3. Mais consumidores.
+4. Processamento em batch: em vez de processar uma mensagem por vez, o sistema processa várias em conjunto.
+5. Autoscaling: aumentar ou reduzir consumidores de acordo com a carga.
+6. Filas com prioridade: separar eventos mais urgentes dos menos urgentes, conforme a regra de negócio.
 
 ---
 
@@ -98,7 +95,7 @@ Uma abordagem comum é usar retries automáticos. O sistema tenta processar a me
 
 Um ponto importante aqui é a idempotência. Se o sistema vai tentar de novo, ele precisa garantir que reprocessar a mesma mensagem não gere duplicidade de efeito.
 
-![DQL-Retry](../assets/DQL-Retry.png)
+![Fluxo de retries e Dead Letter Queue](../assets/DQL-Retry.png)
 
 Se a mensagem continuar falhando e o número máximo de tentativas for atingido, ela pode ser enviada para a Dead Letter Queue. A partir daí, o sistema pode:
 

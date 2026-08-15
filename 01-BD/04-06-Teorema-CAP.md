@@ -1,4 +1,4 @@
-## 6. Teorema CAP
+# 6. Teorema CAP
 
 O Teorema CAP é um conceito importante em sistemas distribuídos.
 
@@ -8,7 +8,7 @@ Ele afirma que, em um sistema distribuído, diante de uma falha de partição de
 * **Availability**;
 * **Partition Tolerance**.
 
-### Consistency
+## Consistency
 
 Todos os nós enxergam o mesmo dado ao mesmo tempo.
 
@@ -18,7 +18,7 @@ Exemplo:
 Se uma transferência bancária foi confirmada, qualquer leitura posterior deve refletir esse novo saldo.
 ```
 
-### Availability
+## Availability
 
 O sistema continua respondendo, mesmo que algumas partes estejam com problema.
 
@@ -28,7 +28,7 @@ Exemplo:
 Mesmo se um nó falhar, a aplicação ainda responde às requisições.
 ```
 
-### Partition Tolerance
+## Partition Tolerance
 
 O sistema continua funcionando mesmo quando existe falha de comunicação entre nós.
 
@@ -38,7 +38,7 @@ Exemplo:
 Dois servidores não conseguem se comunicar temporariamente, mas o sistema precisa lidar com isso.
 ```
 
-### Interpretação prática
+## Interpretação prática
 
 Em sistemas distribuídos, falhas de rede podem acontecer. Por isso, normalmente assumimos que **Partition Tolerance** é necessária.
 
@@ -69,4 +69,3 @@ Exemplos:
 * estoque e pagamento geralmente exigem mais consistência.
 
 ---
-

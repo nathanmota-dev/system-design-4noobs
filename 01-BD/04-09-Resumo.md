@@ -1,4 +1,4 @@
-## Resumo
+# Resumo das otimizações de banco de dados
 
 As principais estratégias de otimização de banco de dados são:
 

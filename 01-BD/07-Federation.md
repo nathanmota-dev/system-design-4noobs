@@ -1,34 +1,35 @@
-## Federation
+# Federação de bancos de dados
 
-Federation é uma estratégia de banco de dados que foi criada pra conseguir lidar com bancos de dados em diferentes regiões onde ela permite dividir um banco de dados em várias partes (federations) e consultar todas elas de forma transparente.
+Federação é uma estratégia que permite dividir dados entre bancos independentes e oferecer uma camada capaz de consultar ou rotear operações entre eles. A divisão pode ocorrer por região, domínio ou requisito regulatório.
 
-Na prática o Federation pode ser:
+Na prática, a camada de federação pode atuar como:
 
-- Router
-- Agregador
-- Coordernador de Queries
+- Roteador.
+- Agregador.
+- Coordenador de queries.
 
-Ele funciona como uma peça que nos ajuda na sincronização de dados entre diferentes bancos de dados que estão em diferentes regiões. Ele tem algumas resposabilidades e dependendo do que a gente quer que ele faça, ele pode ser configurado de diferentes maneiras. As principais responsabilidades do Federation incluem:
+Ela não sincroniza os bancos automaticamente; sua responsabilidade principal é localizar e combinar os dados. Dependendo do desenho, pode:
 
-- Qual DB regiao recebe uma escrita
-- Quais regioes participam de uma query
-- Combinar os resultados de diferentes regioes em uma única resposta
+- Decidir qual banco ou região recebe uma escrita.
+- Definir quais regiões participam de uma query.
+- Combinar resultados de diferentes regiões em uma única resposta.
 
-Além de poder ter dados em diferentes regiões como foi citado, ele pode ser usado caso a gente tenha que dividir os dados por questões regulatórias de países, exemplo alguns países da europa não permitem armazenar tipos de dados sensíveis em uma região específica, pra isso o Federation serve para dividir os dados em diferentes regiões e garantir que os dados sensíveis sejam armazenados em regiões seguras.
+Além da distribuição geográfica, a federação pode atender a requisitos de residência de dados. Certos dados podem precisar permanecer em países ou regiões específicos por questões regulatórias e contratuais.
 
-Quando dados são muito usados, eles podem ser armazenados em um tabelão que inclui o dado e a região onde ele está armazenado como:
+Para evitar consultar todas as regiões, um diretório pode mapear o identificador do dado para sua localização:
 
-user_id | region
-nathan  | europe
+| `user_id` | Região |
+|---|---|
+| `nathan` | Europa |
 
-melhorando significativamente a performance das consultas distribuídas entre as regiões.
+Esse índice melhora o desempenho do roteamento, mas também precisa ser mantido consistente quando um dado muda de região.
 
-### Como federation e pedido em entrevistas de SD
+## Como federação é abordada em entrevistas de System Design
 
-A forma mais simples que Federation e pedido em entrevistas de SD e seguindo um exemplo anterior onde vamos pensar que a gente tem um user e ele precisa fazer uma escrita de dados como adicionar um usuario, entao o servidor primeiro verifica o cache e o banco de dados daquela região, se não encontrar, ele verifica as outras regiões e se encontrar, ele retorna o resultado. Normalmente como foi falado anteiormente pra diminuir esse tempo de resposta se essa operacao for muito comum, como por exemplo no facebook e, pra nao verificar todas as regiões, teria uma tabela com o user_id e a região onde ele está armazenado, assim quando o servidor precisa fazer uma escrita, ele verifica essa tabela e redireciona para a região correta.
+A forma mais simples de abordar federação em uma entrevista é explicar como localizar a região responsável pelo usuário. Em vez de verificar todos os bancos, o servidor consulta um diretório com o `user_id` e a região correspondente e redireciona a operação para o banco correto.
 
-Outra estratégia seria, vamos supor na netflix onde e um sistema que a gente tem muito mais leituras do que escritas, nesse caso faria mais sentido fazer multiplas replicas de leitura para cada região, assim quando o servidor precisa fazer uma leitura, ele pode escolher qualquer uma das replicas disponiveis, aumentando a disponibilidade e a performance do sistema porém quando ele precisar fazer uma escrita vai ter uma latência maior porque ele precisa escrever na região específica onde o dado está armazenado.
+Em um sistema com muito mais leituras do que escritas, também pode fazer sentido manter réplicas de leitura em cada região. O servidor lê da réplica mais próxima, mas direciona a escrita para a região responsável pelo dado. O trade-off é lidar com a latência de escrita e com o atraso da replicação.
 
-Federated query layer - É uma api em camadas que permite a leitura de dados em diferentes regiões e armazenar todos em joins em uma única tabela diminuindo siginficativamente. Essa estrátégia é bem complexa e custosa então não é sempre que vale a pela e é recomendado apenas para casos de leitura muito comum, normalmente vale no máximo citar mas não é uma solução muito comum.
+Uma *federated query layer* consulta fontes diferentes e combina seus resultados. Essa estratégia pode facilitar consultas globais, mas adiciona latência, custo e complexidade, principalmente em joins entre regiões. Em uma entrevista, vale citá-la somente quando existe uma necessidade clara de consulta federada.
 
 ---

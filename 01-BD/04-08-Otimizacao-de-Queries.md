@@ -1,4 +1,4 @@
-## 8. Otimização de Queries
+# 8. Otimização de Queries
 
 Além da estrutura do banco, também é importante otimizar as queries.
 
@@ -8,7 +8,7 @@ Algumas estratégias importantes:
 
 ---
 
-### 8.1. Usar EXPLAIN / EXPLAIN ANALYZE
+## 8.1. Usar EXPLAIN / EXPLAIN ANALYZE
 
 `EXPLAIN` mostra como o banco pretende executar a query.
 
@@ -33,7 +33,7 @@ ORDER BY created_at DESC;
 
 ---
 
-### 8.2. Filtrar cedo
+## 8.2. Filtrar cedo
 
 Sempre que possível, é melhor reduzir o volume de dados antes de fazer joins ou agregações.
 
@@ -63,7 +63,7 @@ Na prática, otimizadores modernos muitas vezes já fazem isso, mas em entrevist
 
 ---
 
-### 8.3. Evitar nested subqueries desnecessárias
+## 8.3. Evitar nested subqueries desnecessárias
 
 Subqueries aninhadas podem deixar a query mais difícil de otimizar e entender.
 
@@ -79,7 +79,7 @@ Nem toda subquery é ruim, mas subqueries desnecessárias podem piorar performan
 
 ---
 
-### 8.4. Paginação
+## 8.4. Paginação
 
 Retornar muitos dados de uma vez é um problema comum.
 
@@ -123,7 +123,7 @@ Cursor pagination costuma escalar melhor para feeds, timelines e listas grandes.
 
 ---
 
-### 8.5. Batching
+## 8.5. Batching
 
 Batching consiste em agrupar várias operações em uma única chamada ou transação.
 
@@ -153,7 +153,7 @@ Batching é útil para:
 
 ---
 
-### 8.6. Materialized Views
+## 8.6. Materialized Views
 
 Uma materialized view armazena o resultado de uma query previamente calculada.
 
@@ -193,4 +193,3 @@ Desvantagens:
 * ocupa armazenamento extra.
 
 ---
-

@@ -1,4 +1,4 @@
-## 3. Connection Pooling
+# 3. Connection Pooling
 
 Abrir uma conexão com o banco de dados tem custo.
 
@@ -43,9 +43,8 @@ Trade-offs:
 
 ---
 
-É importante destacar que: Índice + Connection Pooling conseguem otimizar BDs com carga de 50k até 100k de requisições por segundo resolvendo mais de 80% do problema dos sistemas.
+Índices e connection pooling resolvem gargalos diferentes e costumam ser otimizações iniciais importantes. O ganho real depende das consultas, do hardware, da concorrência e da configuração; não existe um número de requisições por segundo garantido para todos os sistemas.
 
 ![indice-connection-polling.png](../assets/indice-connection-polling.png)
 
-Além disso assim como mostra na imagem conseguem otimizar consultas de 500ms pra 2ms. 
-
+A imagem ilustra um cenário em que a combinação reduziu bastante o tempo de resposta, mas esse resultado não deve ser generalizado sem medição.

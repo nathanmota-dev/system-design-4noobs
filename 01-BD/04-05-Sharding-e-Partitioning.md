@@ -1,4 +1,4 @@
-## 5. Sharding e Partitioning
+# 5. Sharding e Partitioning
 
 Em bancos com grande volume de dados, uma única tabela ou um único servidor pode não ser suficiente.
 
@@ -20,7 +20,7 @@ Apesar de serem parecidas, não são exatamente a mesma coisa.
 
 ---
 
-### 5.1. Partitioning
+## 5.1. Partitioning
 
 Partitioning é a divisão lógica dos dados dentro do próprio banco.
 
@@ -62,7 +62,7 @@ Tipos comuns de partitioning:
 
 ---
 
-### 5.2. Sharding
+## 5.2. Sharding
 
 Sharding é a divisão dos dados entre múltiplos bancos ou servidores.
 
@@ -84,9 +84,9 @@ hash(user_id) % número_de_shards
 
 O objetivo é distribuir carga e armazenamento horizontalmente.
 
-### Estratégias comuns de sharding
+## Estratégias comuns de sharding
 
-#### Sharding por faixa
+### Sharding por faixa
 
 Divide os dados por intervalos.
 
@@ -108,7 +108,7 @@ Desvantagem:
 
 ---
 
-#### Sharding por hash
+### Sharding por hash
 
 Usa uma função hash para distribuir os dados.
 
@@ -130,7 +130,7 @@ Desvantagem:
 
 ---
 
-#### Sharding por chave ou tenant
+### Sharding por chave ou tenant
 
 Divide os dados com base em uma chave de negócio.
 
@@ -155,7 +155,7 @@ Desvantagem:
 
 ---
 
-### Trade-offs de sharding
+## Trade-offs de sharding
 
 Sharding melhora escala, mas aumenta bastante a complexidade.
 
@@ -178,4 +178,3 @@ Em entrevista de System Design, sharding costuma ser uma solução para escala a
 6. sharding.
 
 ---
-

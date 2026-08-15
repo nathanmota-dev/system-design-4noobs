@@ -1,37 +1,39 @@
 # Tipos de Deploy
 
-Pra realizar Deploy, temos duas principais abordagens:
+Para realizar deploy, temos duas abordagens principais:
 
-- ***Deploy Manual*** x ***Deploy Automático***
+- **Deploy manual:** uma pessoa executa as etapas necessárias.
+- **Deploy automático:** uma pipeline executa etapas padronizadas.
 
-No Deploy manual, normalmente a gente conecta na ec2 via ssh, da um pull do código e executa os comandos necessários para deploy, isso tem que ser feito manualmente e é ruim porque a pessoa pode errar e não executar todos os comandos necessários como verificar testes antes do deploy.
-Já o Deploy automático, utiliza ferramentas como Jenkins, GitLab CI/CD ou GitHub Actions para automatizar o processo de deploy, garantindo que sejam executados várias pipelines (como testes, build e deploy) antes de realizar o deploy e tem uma precisão muito maior porque é sempre feito as mesmas verificações.  
+No deploy manual, normalmente uma pessoa acessa o servidor, atualiza o código e executa os comandos necessários. O processo é mais sujeito a erros e etapas esquecidas, como testes ou migrações.
+
+O deploy automático usa ferramentas como Jenkins, GitLab CI/CD ou GitHub Actions para executar uma pipeline reproduzível, com etapas como testes, build e implantação.
 
 ## Formas de Deploy
 
 ### Recreate
 
-Você recria a instância toda, desligando a atual e criando uma nova. É ruim porque tem downtime porque a instância é desligada e recriada.
+A versão atual é encerrada antes de a nova entrar em operação. É simples e barato, mas causa indisponibilidade durante a troca.
 
 ### Rolling Update
 
-Você atualiza a instância de forma gradual, desligando uma versão antiga e substituindo-a por uma nova. É bom porque tem downtime mínimo porque a instância é atualizada gradualmente.
+As instâncias antigas são substituídas gradualmente por novas. A estratégia mantém capacidade durante a atualização, mas as duas versões podem atender tráfego ao mesmo tempo e precisam ser compatíveis.
 
 ### Blue/Green
 
-Você tem duas instâncias, uma verde (a nova) e uma azul (a antiga), e você atualiza a verde antes de desligar a azul. É bom porque tem downtime mínimo porque a instância é atualizada gradualmente. A parte positiva é que não tem downtime e o RollBack é muito fácil porque como o tráfego é redirecionado para a nova instância, é fácil reverter para a antiga e as releases são mais seguras porque é possível testar a nova instância antes de desligar a antiga. Pontos negativos: Mais caro por ter 2 instâncias em execução ao mesmo tempo e um pouco mais complexo de configurar.
+Dois ambientes equivalentes ficam disponíveis: um atende produção e o outro recebe a nova versão. Depois dos testes, o tráfego é redirecionado para o novo ambiente. O rollback é rápido enquanto o ambiente anterior continua disponível. O custo e a complexidade aumentam porque as duas infraestruturas coexistem durante a troca.
 
 ### Canary
 
-Você tem uma instância em execução e atualiza-a gradualmente, testando-a antes de desligar a antiga. Funciona assim: inicialmente é direcionando 5% do tráfego para a nova instância e 95% para a antiga, ou seja, 5% do tráfego são pra BETA testers e 95% são pra a versão antiga. Após esse primeiro teste, a ideia é ir aumentando essa porcentagem de tráfego para a nova instância e diminuindo para a antiga, até que a nova instância atinja 100% do tráfego. Após isso, a nova instância é desligada e a antiga é ativada. Isso é uma estratégia muito boa porque permite verificar bugs em produção afetando apenas uma parte pequena da base de usuários e fácil de reverter caso necessário. Pontos negativos: Aumenta a complexidade.
+Uma pequena parcela do tráfego, como 5%, é direcionada para a nova versão, enquanto o restante continua na versão anterior. Se métricas e testes estiverem saudáveis, a participação da nova versão aumenta até chegar a 100%. Em caso de problema, o tráfego volta para a versão anterior. A estratégia limita o impacto inicial de bugs, mas exige roteamento gradual, observabilidade e critérios de promoção e rollback.
 
-#### Shadow
+### Shadow
 
-O Shadow é uma estratégia de canary que permite testar a nova instância sem afetar o tráfego real. Na prática funciona assim: É duplicado todas as requests de produção para a nova instância da nova versão, isso permite testar a nova instância sem afetar o tráfego real e conseguir fazer testes de carga, performance e estabilidade pra ver se essa nova versão realmente funciona como esperado e irá suportar a carga de produção. Lembrando que os requests não são verdadeiros, é uma simulação de requests de produção. Pontos negativos: Mais custoso que todas as outras estratégias porque duplica todas as requests de produção, então teria duas infras com a mesma carga.
+No shadow deployment, uma cópia do tráfego real é enviada para a nova versão, mas suas respostas não chegam aos usuários. Isso ajuda a avaliar carga, desempenho e compatibilidade. A versão shadow não deve produzir efeitos colaterais reais, como cobranças ou envio de e-mails; o tráfego precisa ser anonimizado ou isolado quando contém dados sensíveis. O custo aumenta porque as duas versões processam carga simultaneamente.
 
 ### Serverless
 
-Em serverless não nos preocupamos muito com o deploy da máquina física, pois o serviço é gerenciado pelo provedor e a infraestrutura é abstraída, o código novo é substituído automaticamente e não tem downtime.
+Em serverless, o provedor abstrai os servidores, mas a estratégia de implantação continua importante. Versionamento, aliases, canary e rollback ajudam a evitar indisponibilidade e regressões durante a troca do código.
 
 ---
 
@@ -39,7 +41,8 @@ Em serverless não nos preocupamos muito com o deploy da máquina física, pois 
 
 No momento de planejar o deploy e provisionar a infraestrutura (tamanho de máquinas, auto-scaling e arquitetura), é fundamental entender se a aplicação é **I/O Bound** ou **CPU Bound**. Isso evita gastos desnecessários e quedas em produção.
 
-### 1. I/O Bound (Limitado por Entrada e Saída)
+### 1. I/O Bound (limitado por entrada e saída)
+
 A aplicação passa a maior parte do tempo esperando respostas de recursos externos (banco de dados, requisições de rede/APIs, leitura/escrita em arquivos, filas). A CPU fica ociosa na maior parte do tempo.
 
 - **Exemplos:** Requisições CRUD padrão (ex: `GET /orders/123`), buscas no banco, consumo de APIs REST.
@@ -49,7 +52,8 @@ A aplicação passa a maior parte do tempo esperando respostas de recursos exter
   - Implementação de Cache (ex: Redis) e Read Replicas no banco para diminuir a espera de I/O.
   - Escala Horizontal (adicionar mais réplicas leves da aplicação conforme a demanda de requisições aumenta).
 
-### 2. CPU Bound (Limitado por Processamento)
+### 2. CPU Bound (limitado por processamento)
+
 O gargalo da aplicação é o processador. A CPU opera perto de 100% para realizar cálculos complexos e transformar dados.
 
 - **Exemplos:** Processamento e conversão de imagem/vídeo, criptografia, Inteligência Artificial, Machine Learning, compressão de arquivos.

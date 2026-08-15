@@ -1,4 +1,4 @@
-## 7. Normalização e Denormalização
+# 7. Normalização e Denormalização
 
 A modelagem dos dados também afeta performance.
 
@@ -9,7 +9,7 @@ Duas estratégias importantes são:
 
 ---
 
-### 7.1. Normalização
+## 7.1. Normalização
 
 Normalização é o processo de dividir os dados em tabelas menores e relacionadas para reduzir redundância e evitar inconsistências.
 
@@ -58,7 +58,7 @@ Normalização costuma ser uma boa escolha quando consistência e integridade do
 
 ---
 
-### 7.2. Denormalização
+## 7.2. Denormalização
 
 Denormalização é duplicar dados de propósito para melhorar a performance de leitura.
 

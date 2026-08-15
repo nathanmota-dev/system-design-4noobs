@@ -6,7 +6,7 @@ Service Mesh é um padrão de arquitetura que adiciona uma camada dedicada à co
 - **Observabilidade:** métricas, rastreamento distribuído e registros das chamadas.
 - **Gerenciamento de tráfego:** roteamento, balanceamento de carga, *retries* e *timeouts*.
 
-### Como funciona
+## Como funciona
 
 Em geral, o Service Mesh utiliza um proxy associado a cada microsserviço. Esse proxy, que costuma ser executado como um *sidecar*, intercepta o tráfego de entrada e de saída. Assim, os serviços se comunicam por meio dos proxies, que aplicam as políticas do mesh e encaminham as chamadas aos demais serviços.
 

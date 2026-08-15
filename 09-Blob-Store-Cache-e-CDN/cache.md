@@ -222,5 +222,5 @@ Por isso, cache não deve ser utilizado apenas porque um dado pode ser armazenad
 
 ## Problemas com o cache
 
-Stampede - O problema de stampede ocorre quando múltiplos clientes acessam o cache simultaneamente, resultando em múltiplas consultas ao banco de dados.
-Hot keys - O problema de hot keys ocorre quando um único chave é acessada muito frequentemente, resultando em um grande número de consultas ao banco de dados.
+- **Cache stampede:** ocorre quando um item popular expira e muitas requisições tentam reconstruí-lo ao mesmo tempo, sobrecarregando a fonte original. Locks por chave, TTL com jitter e atualização antecipada ajudam a reduzir o problema.
+- **Hot keys:** ocorre quando uma única chave recebe uma parcela muito grande dos acessos e sobrecarrega o nó que a mantém. Réplicas de leitura, cache local e divisão do valor podem distribuir a carga, dependendo do caso.
