@@ -40,16 +40,7 @@
 
 **5 - Overview de Alto Nível**
 
-```text
-[Cliente]
-    |
-[CDN opcional / API Gateway / Load Balancer]
-    |
-[URL Service - stateless]
-    | \
-    |  \--> [Redis: short_code -> original_url]
-    \-----> [Banco SQL com alta disponibilidade]
-```
+![Overview de Alto Nível](../assets/shorter.png)
 
 O serviço valida a criação, gera o código e persiste o mapeamento. No redirecionamento, consulta primeiro o cache e usa o banco como fonte de verdade em caso de *cache miss*.
 
