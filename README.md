@@ -72,8 +72,15 @@ Estrutura do repositório:
 | 19.2 | ┣ [2-SSE.md](./18-Real-time/2-SSE.md) | Server-Sent Events |
 | 19.3 | ┗ [3-Websockets.md](./18-Real-time/3-Websockets.md) | Comunicação bidirecional com WebSockets |
 | 20 | [Requisitos e Estimativas](./19-Requistios-e-Estimativas/) | Requisitos, capacidade e planejamento de sistemas |
-| 20.1 | ┣ [1-requisitos..md](./19-Requistios-e-Estimativas/1-requisitos..md) | Levantamento e definição de requisitos |
-| 20.2 | ┣ [2-redundancia.md](./19-Requistios-e-Estimativas/2-redundancia.md) | Redundância e disponibilidade |
-| 20.3 | ┗ [3-estimativas.md](./19-Requistios-e-Estimativas/3-estimativas.md) | Estimativas de capacidade e dimensionamento |
+| 20.1 | ┣ [1-Requisitos.md](./19-Requistios-e-Estimativas/1-Requisitos.md) | Levantamento e definição de requisitos |
+| 20.2 | ┣ [2-Redundancia.md](./19-Requistios-e-Estimativas/2-Redundancia.md) | Redundância e disponibilidade |
+| 20.3 | ┗ [3-Estimativas.md](./19-Requistios-e-Estimativas/3-Estimativas.md) | Estimativas de capacidade e dimensionamento |
+| 21 | [Como Montar um System Design](./20-Como-Montar-System-Design/) | Processo estruturado para construir e comunicar um System Design |
+| 21.1 | ┗ [index.md](./20-Como-Montar-System-Design/index.md) | Roteiro de requisitos, arquitetura, escala, resiliência e trade-offs |
+| 22 | [Exemplos de System Design](./21-Exemplos-de-System-Design/) | Exemplos práticos de sistemas e arquiteturas |
+| 22.1 | ┣ [Encurtador.md](./21-Exemplos-de-System-Design/Encurtador.md) | Design de um encurtador de URLs |
+| 22.2 | ┗ [WhatsApp.md](./21-Exemplos-de-System-Design/WhatsApp.md) | Design de um sistema de mensagens em tempo real |
+| 23 | [Dicas](./22-Dicas/) | Dicas para entrevistas de System Design |
+| 23.1 | ┗ [Dicas.md](./22-Dicas/Dicas.md) | Boas práticas para estruturar e apresentar uma solução |
 
 Cada módulo busca explicar o tema, conectá-lo ao contexto de System Design e apresentar os principais trade-offs das decisões arquiteturais.
