@@ -28,4 +28,4 @@ Ao finalizar a leitura do repositório, você não saberá tudo sobre System Des
 
 O aprendizado, porém, acontece principalmente na prática — e não apenas estudando a teoria. Entender esses conceitos ajudará você a identificar quando usar uma solução ou outra em um cenário específico.
 
-Não adianta partir para a prática sem compreender os conceitos fundamentais. Afinal, você não saberá quando ou como usar um gateway de API ou um Load Balancer se não entender como eles funcionam.
+Não adianta partir para a prática sem compreender os conceitos fundamentais. Afinal, você não saberá quando ou como usar um API Gateway ou um Load Balancer se não entender como eles funcionam.
