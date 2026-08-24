@@ -1,6 +1,40 @@
-# System Design Study
+<!-- Logo 4noobs -->
 
-Estrutura do repositório:
+<p align="center">
+  <a href="https://github.com/he4rt/4noobs" target="_blank">
+    <img src="./.github/header_4noobs.svg">
+  </a>
+</p>
+
+<!-- Title -->
+
+<p align="center">
+  <h1 align="center" style="font-size: 2.5em;">System Design Study</h1>
+
+  <p align="center">
+    <br />
+    <a href="#roadmap"><strong>Explore a documentação »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/nathanmota-dev/system-design-study/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/nathanmota-dev/system-design-study/issues">Request Feature</a>
+  </p>
+</p>
+
+ <!-- ABOUT THE PROJECT -->
+
+## **Aprenda os fundamentos de System Design e como projetar sistemas escaláveis, resilientes e distribuídos.**
+
+Este repositório reúne estudos de System Design organizados em módulos, indo dos fundamentos de bancos de dados, redes e mensageria até arquiteturas distribuídas, observabilidade, segurança e cloud.
+
+Ao percorrer o material, você encontrará conceitos, exemplos práticos e trade-offs para entender como os componentes de um sistema se relacionam e como tomar decisões arquiteturais conscientes.
+
+O conteúdo foi organizado para servir como base de estudos, consulta e preparação para entrevistas de System Design.
+
+<!-- ROADMAP OF PROJECT -->
+
+## ROADMAP
 
 | # | Módulo | Descrição |
 |---|--------|-----------|
@@ -83,4 +117,26 @@ Estrutura do repositório:
 | 23 | [Dicas](./22-Dicas/) | Dicas para entrevistas de System Design |
 | 23.1 | ┗ [Dicas.md](./22-Dicas/Dicas.md) | Boas práticas para estruturar e apresentar uma solução |
 
-Cada módulo busca explicar o tema, conectá-lo ao contexto de System Design e apresentar os principais trade-offs das decisões arquiteturais.
+<!-- CONTRIBUTING -->
+
+## Como Contribuir
+
+Contribuições fazem com que a comunidade open source seja um lugar incrível para aprender, inspirar e criar. Todas as contribuições são **extremamente apreciadas**.
+
+1. Realize um fork do projeto.
+2. Crie uma branch com a nova feature (`git checkout -b feature/featureBraba`).
+3. Realize o commit (`git commit -m 'Adicionado conteudo brabo'`).
+4. Realize o push da branch (`git push origin feature/featureBraba`).
+5. Abra um Pull Request.
+
+## Autor
+
+- **Nathan Mota** - _Desenvolvedor Full Stack_ - [GitHub](https://github.com/nathanmota-dev)
+
+---
+
+<p align="center">
+  <a href="https://github.com/he4rt/4noobs" target="_blank">
+    <img src="./.github/footer_4noobs.svg" width="380">
+  </a>
+</p>
