@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/he4rt/4noobs" target="_blank">
-    <img src="./.github/header_4noobs.svg">
+    <img src="./assets/header_4noobs.svg">
   </a>
 </p>
 
@@ -137,6 +137,6 @@ Contribuições fazem com que a comunidade open source seja um lugar incrível p
 
 <p align="center">
   <a href="https://github.com/he4rt/4noobs" target="_blank">
-    <img src="./.github/footer_4noobs.svg" width="380">
+    <img src="./assets/footer_4noobs.svg" width="380">
   </a>
 </p>
